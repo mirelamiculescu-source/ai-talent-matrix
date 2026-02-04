@@ -87,7 +87,7 @@
 
         .main-grid {
             display: grid;
-            grid-template-columns: 300px 1fr;
+            grid-template-columns: 320px 1fr;
             gap: 2rem;
             margin-top: 3rem;
         }
@@ -96,6 +96,9 @@
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
+            position: sticky;
+            top: 2rem;
+            align-self: start;
         }
 
         .card {
@@ -119,6 +122,15 @@
             color: var(--text);
         }
 
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 3rem 0 1.5rem;
+            color: var(--text);
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -133,7 +145,7 @@
             letter-spacing: 0.05em;
         }
 
-        input, select {
+        input, select, textarea {
             width: 100%;
             padding: 0.875rem;
             background: var(--secondary);
@@ -145,10 +157,36 @@
             transition: all 0.3s ease;
         }
 
-        input:focus, select:focus {
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--accent);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            cursor: pointer;
         }
 
         .skill-assessment {
@@ -171,7 +209,7 @@
         .skill-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 1.5rem;
         }
 
@@ -190,6 +228,17 @@
             border-radius: 8px;
             min-width: 60px;
             text-align: center;
+        }
+
+        .question-text {
+            font-size: 0.95rem;
+            color: var(--text);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            padding: 1rem;
+            background: rgba(59, 130, 246, 0.05);
+            border-left: 3px solid var(--accent);
+            border-radius: 4px;
         }
 
         .rating-group {
@@ -458,9 +507,29 @@
             transition: width 0.5s ease;
         }
 
+        .progress-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--secondary);
+            z-index: 1000;
+        }
+
+        .progress-indicator-fill {
+            height: 100%;
+            background: var(--gradient);
+            transition: width 0.3s ease;
+        }
+
         @media (max-width: 1024px) {
             .main-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
             }
 
             h1 {
@@ -490,23 +559,40 @@
     </style>
 </head>
 <body>
+    <div class="progress-indicator">
+        <div class="progress-indicator-fill" id="progressBar"></div>
+    </div>
+
     <div class="container">
         <header>
             <h1>AI Skills Assessment</h1>
-            <p class="subtitle">Evaluate & Benchmark AI Competencies</p>
+            <p class="subtitle">Behavior-Anchored AI Competency Evaluation</p>
         </header>
 
         <div class="main-grid">
             <div class="sidebar">
                 <div class="card">
-                    <h2 class="card-title">Employee Info</h2>
+                    <h2 class="card-title">Employee Information</h2>
                     <div class="form-group">
                         <label>Employee Name</label>
-                        <input type="text" id="employeeName" placeholder="Enter name">
+                        <input type="text" id="employeeName" placeholder="Enter full name">
                     </div>
                     <div class="form-group">
                         <label>Job Title</label>
-                        <input type="text" id="jobTitle" placeholder="Enter title">
+                        <input type="text" id="jobTitle" placeholder="Enter job title">
+                    </div>
+                    <div class="form-group">
+                        <label>Main Role Category</label>
+                        <select id="roleCategory">
+                            <option value="">Select category</option>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Product">Product</option>
+                            <option value="Operations">Operations</option>
+                            <option value="Sales">Sales</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Leadership">Leadership</option>
+                            <option value="Other">Other</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Expected AI Role</label>
@@ -526,17 +612,30 @@
                             <option value="High">High</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label>Primary AI Usage Context</label>
+                        <select id="aiContext">
+                            <option value="">Select context</option>
+                            <option value="Internal efficiency">Internal efficiency</option>
+                            <option value="Customer facing">Customer-facing processes</option>
+                            <option value="Product features">Product/service features</option>
+                            <option value="Strategic">Strategic/decision making</option>
+                            <option value="Not applicable">Not currently applicable</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="card">
-                    <h2 class="card-title">Assessment Info</h2>
+                    <h2 class="card-title">Assessment Guide</h2>
                     <div style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
                         <p><strong>Rating Scale:</strong></p>
-                        <p style="margin-top: 0.5rem;">1 = No knowledge<br>
+                        <p style="margin-top: 0.5rem;">
+                        1 = No exposure/knowledge<br>
                         2 = Basic awareness<br>
-                        3 = Intermediate<br>
-                        4 = Advanced<br>
-                        5 = Expert</p>
+                        3 = Regular guided usage<br>
+                        4 = Confident application<br>
+                        5 = Expert/self-initiated
+                        </p>
                     </div>
                 </div>
             </div>
@@ -544,6 +643,64 @@
             <div class="content">
                 <div class="skill-assessment" id="skillAssessment">
                     <!-- Skills will be dynamically generated -->
+                </div>
+
+                <h2 class="section-title">Role Impact & Alignment</h2>
+                <div class="card">
+                    <div class="form-group">
+                        <label>Does your current AI skill level match what is expected for your AI Role?</label>
+                        <select id="roleMatch">
+                            <option value="">Select option</option>
+                            <option value="Exceeds">Exceeds expectations</option>
+                            <option value="Meets">Meets expectations</option>
+                            <option value="Below">Below expectations</option>
+                            <option value="Unsure">Unsure</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Which AI responsibilities are part of your role TODAY?</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="currentResponsibilities" value="Usage only">
+                                <span>Usage only</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="currentResponsibilities" value="Enablement of others">
+                                <span>Enablement of others</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="currentResponsibilities" value="Design or integration">
+                                <span>Design or integration</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="currentResponsibilities" value="Leadership and strategy">
+                                <span>Leadership and strategy</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Which AI responsibilities SHOULD be part of your role within 12 months?</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="futureResponsibilities" value="Usage only">
+                                <span>Usage only</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="futureResponsibilities" value="Enablement of others">
+                                <span>Enablement of others</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="futureResponsibilities" value="Design or integration">
+                                <span>Design or integration</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="futureResponsibilities" value="Leadership and strategy">
+                                <span>Leadership and strategy</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 <button class="btn" onclick="calculateResults()">Generate Assessment Report</button>
@@ -578,95 +735,148 @@
                         <h3 class="card-title">Detailed Skill Breakdown</h3>
                         <div id="detailedBreakdown"></div>
                     </div>
+
+                    <div class="card" style="margin-top: 2rem;">
+                        <h3 class="card-title">Role Alignment Summary</h3>
+                        <div id="roleAlignment"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const skills = [
+        const skillDomains = [
             {
-                id: 'aiExposure',
-                name: 'AI Exposure',
-                description: 'Experience and familiarity with AI concepts and applications'
+                name: 'AI Exposure and Awareness',
+                questions: [
+                    'How frequently do you actively use AI tools in your daily work?',
+                    'How many different AI tools or AI-powered features have you used hands-on in the last 3 months?',
+                    'How often do you participate in AI-related learning, training, or knowledge sharing?',
+                    'How often do you discuss AI use cases or limitations with colleagues or customers?'
+                ]
             },
             {
-                id: 'aiFundamentals',
                 name: 'AI Fundamentals',
-                description: 'Understanding of AI concepts and technologies (ML, NLP, GenAI)'
+                questions: [
+                    'How well do you understand the difference between automation, machine learning, and generative AI?',
+                    'How confident are you explaining in simple terms how generative AI produces outputs?',
+                    'How well do you understand the strengths and limitations of AI models (hallucinations, bias, non-determinism)?',
+                    'How confident are you choosing when AI is appropriate versus when it should not be used?'
+                ]
             },
             {
-                id: 'dataLiteracy',
                 name: 'Data Literacy',
-                description: 'Ability to read, analyze, and use data effectively'
+                questions: [
+                    'How confident are you interpreting data outputs used by AI systems?',
+                    'How well do you understand data quality issues and their impact on AI results?',
+                    'How familiar are you with the data sources AI tools rely on in your domain?',
+                    'How confident are you validating AI-generated insights against data or business logic?'
+                ]
             },
             {
-                id: 'aiTools',
-                name: 'AI Tools & Platforms',
-                description: 'Proficiency in AI software or platforms relevant to work'
+                name: 'AI Tools and Platforms',
+                questions: [
+                    'How many AI tools or AI-enabled features do you actively use without assistance?',
+                    'How confident are you using AI tools to complete real work tasks end-to-end?',
+                    'How well do you understand the limitations and risks of the AI tools you use?',
+                    'How often do you evaluate or compare AI tools for suitability in your work?'
+                ]
             },
             {
-                id: 'prompting',
-                name: 'Prompting / Prompt Engineering',
-                description: 'Ability to effectively communicate with AI systems'
+                name: 'Prompting and Interaction Design',
+                questions: [
+                    'How confident are you writing prompts that produce useful and reliable outputs?',
+                    'How often do you iterate or refine prompts to improve results?',
+                    'How well do you adapt prompts for different goals (analysis, creativity, summarization, automation)?',
+                    'How confident are you assessing whether an AI response is incorrect, incomplete, or misleading?'
+                ]
             },
             {
-                id: 'workflow',
-                name: 'Workflow Integration',
-                description: 'Embedding AI in daily workflow processes'
+                name: 'Workflow Integration and Orchestration',
+                questions: [
+                    'Have you applied AI to automate or improve a recurring task or workflow?',
+                    'How confident are you identifying processes where AI could improve efficiency or quality?',
+                    'How often do you combine AI tools with other systems or workflows?',
+                    'How confident are you documenting or explaining AI-enabled workflows to others?'
+                ]
             },
             {
-                id: 'analytics',
-                name: 'Analytics / Decision Making',
-                description: 'Using AI to support business decisions'
+                name: 'Analytics and Decision Making',
+                questions: [
+                    'How often do you use AI-generated insights to support decisions?',
+                    'How confident are you validating AI outputs before acting on them?',
+                    'How well do you understand the assumptions behind AI-generated recommendations?',
+                    'How confident are you explaining AI-supported decisions to stakeholders?'
+                ]
             },
             {
-                id: 'security',
-                name: 'Security, Ethics & Governance',
-                description: 'Awareness of responsible AI usage'
+                name: 'Security, Ethics and Governance',
+                questions: [
+                    'How familiar are you with company policies related to AI usage and data protection?',
+                    'How confident are you identifying sensitive or restricted data in AI usage?',
+                    'How well do you understand ethical risks (bias, fairness, misuse)?',
+                    'How confident are you escalating or challenging inappropriate AI usage?'
+                ]
             },
             {
-                id: 'innovation',
-                name: 'Innovation / Problem Solving',
-                description: 'Using AI creatively to solve problems'
+                name: 'Innovation and Problem Solving',
+                questions: [
+                    'Have you proposed or implemented an AI-driven improvement or solution?',
+                    'How often do you experiment with AI to explore new ways of working?',
+                    'How confident are you turning AI experimentation into repeatable outcomes?',
+                    'How often do you share AI-driven learnings or best practices with others?'
+                ]
             }
         ];
 
         const ratings = {};
+        let questionCounter = 0;
 
         function initializeAssessment() {
             const container = document.getElementById('skillAssessment');
             
-            skills.forEach(skill => {
-                const skillDiv = document.createElement('div');
-                skillDiv.className = 'skill-category';
-                skillDiv.innerHTML = `
-                    <div class="skill-header">
-                        <div>
-                            <div class="skill-name">${skill.name}</div>
-                            <div class="skill-description">${skill.description}</div>
+            skillDomains.forEach((domain, domainIndex) => {
+                const sectionTitle = document.createElement('h2');
+                sectionTitle.className = 'section-title';
+                sectionTitle.textContent = domain.name;
+                container.appendChild(sectionTitle);
+
+                domain.questions.forEach((question, qIndex) => {
+                    const questionId = `q${domainIndex}_${qIndex}`;
+                    questionCounter++;
+                    
+                    const skillDiv = document.createElement('div');
+                    skillDiv.className = 'skill-category';
+                    skillDiv.innerHTML = `
+                        <div class="skill-header">
+                            <div style="flex: 1;">
+                                <div class="skill-name">Question ${questionCounter}</div>
+                                <div class="question-text">${question}</div>
+                            </div>
+                            <div class="skill-score" id="score-${questionId}">-</div>
                         </div>
-                        <div class="skill-score" id="score-${skill.id}">-</div>
-                    </div>
-                    <div class="rating-group" id="rating-${skill.id}">
-                        ${[1, 2, 3, 4, 5].map(rating => `
-                            <button class="rating-btn" onclick="setRating('${skill.id}', ${rating})">${rating}</button>
-                        `).join('')}
-                    </div>
-                    <div class="rating-labels">
-                        <span>No Knowledge</span>
-                        <span>Expert</span>
-                    </div>
-                `;
-                container.appendChild(skillDiv);
+                        <div class="rating-group" id="rating-${questionId}">
+                            ${[1, 2, 3, 4, 5].map(rating => `
+                                <button class="rating-btn" onclick="setRating('${questionId}', ${rating})">${rating}</button>
+                            `).join('')}
+                        </div>
+                        <div class="rating-labels">
+                            <span>No Knowledge</span>
+                            <span>Expert</span>
+                        </div>
+                    `;
+                    container.appendChild(skillDiv);
+                });
             });
+
+            updateProgress();
         }
 
-        function setRating(skillId, rating) {
-            ratings[skillId] = rating;
+        function setRating(questionId, rating) {
+            ratings[questionId] = rating;
             
-            // Update UI
-            const buttons = document.querySelectorAll(`#rating-${skillId} .rating-btn`);
+            const buttons = document.querySelectorAll(`#rating-${questionId} .rating-btn`);
             buttons.forEach((btn, index) => {
                 if (index + 1 === rating) {
                     btn.classList.add('active');
@@ -675,26 +885,44 @@
                 }
             });
             
-            document.getElementById(`score-${skillId}`).textContent = rating;
+            document.getElementById(`score-${questionId}`).textContent = rating;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const totalQuestions = questionCounter;
+            const answeredQuestions = Object.keys(ratings).length;
+            const progress = (answeredQuestions / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
         }
 
         function calculateResults() {
             const name = document.getElementById('employeeName').value;
             const title = document.getElementById('jobTitle').value;
+            const roleCategory = document.getElementById('roleCategory').value;
             const role = document.getElementById('aiRole').value;
             const readiness = document.getElementById('transformationReadiness').value;
+            const context = document.getElementById('aiContext').value;
+            const roleMatch = document.getElementById('roleMatch').value;
 
-            if (!name || !title || !role || !readiness) {
-                alert('Please fill in all employee information including Transformation Readiness');
+            if (!name || !title || !roleCategory || !role || !readiness || !context || !roleMatch) {
+                alert('Please fill in all employee information fields');
                 return;
             }
 
-            if (Object.keys(ratings).length < skills.length) {
-                alert('Please rate all skills');
+            if (Object.keys(ratings).length < questionCounter) {
+                alert('Please answer all questions before generating the report');
                 return;
             }
 
-            const avgProficiency = Object.values(ratings).reduce((a, b) => a + b, 0) / skills.length;
+            // Calculate domain averages
+            const domainAverages = skillDomains.map((domain, domainIndex) => {
+                const domainRatings = domain.questions.map((_, qIndex) => ratings[`q${domainIndex}_${qIndex}`]);
+                const avg = domainRatings.reduce((a, b) => a + b, 0) / domainRatings.length;
+                return { name: domain.name, average: avg };
+            });
+
+            const avgProficiency = domainAverages.reduce((sum, d) => sum + d.average, 0) / domainAverages.length;
             const knowledgeGap = avgProficiency < 2;
             
             // Calculate role gap
@@ -712,6 +940,12 @@
                 roleGap = avgProficiency < 4;
             }
 
+            // Get responsibilities
+            const currentResp = Array.from(document.querySelectorAll('input[name="currentResponsibilities"]:checked'))
+                .map(el => el.value);
+            const futureResp = Array.from(document.querySelectorAll('input[name="futureResponsibilities"]:checked'))
+                .map(el => el.value);
+
             // Show results
             document.getElementById('results').classList.add('active');
             document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
@@ -724,7 +958,7 @@
                     <div class="metric-value" style="color: ${avgProficiency >= 3 ? 'var(--success)' : avgProficiency >= 2 ? 'var(--warning)' : 'var(--danger)'}">
                         ${avgProficiency.toFixed(2)}
                     </div>
-                    <div class="metric-description">Across all 9 skill categories</div>
+                    <div class="metric-description">Across all skill domains</div>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: ${(avgProficiency / 5) * 100}%"></div>
                     </div>
@@ -750,45 +984,35 @@
                     </div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-label">Skill Level Status</div>
-                    <div class="metric-value" style="color: ${!roleGap ? 'var(--success)' : 'var(--warning)'}; font-size: 1.5rem;">
-                        ${!roleGap ? '✓ MEETS' : '⚠ GAP'}
+                    <div class="metric-label">Role Alignment</div>
+                    <div class="metric-value" style="color: ${roleMatch === 'Meets' || roleMatch === 'Exceeds' ? 'var(--success)' : 'var(--warning)'}; font-size: 1.5rem;">
+                        ${roleMatch}
                     </div>
-                    <div class="metric-description">${!roleGap ? 'Meets role expectations' : 'Below expected level'}</div>
+                    <div class="metric-description">Self-assessed vs expected</div>
                 </div>
             `;
 
-            // Generate 9-grid
             generate9Grid(avgProficiency, readiness);
-
-            // Gap analysis
-            generateGapAnalysis(knowledgeGap, roleGap, avgProficiency, expectedLevel);
-
-            // Detailed breakdown
-            generateDetailedBreakdown();
+            generateGapAnalysis(knowledgeGap, roleGap, avgProficiency, expectedLevel, domainAverages);
+            generateDetailedBreakdown(domainAverages);
+            generateRoleAlignment(currentResp, futureResp, roleMatch);
         }
 
         function generate9Grid(avgProf, readiness) {
             const grid = document.getElementById('nineGrid');
             grid.innerHTML = '';
 
-            // Define grid labels based on your examples
-            // Rows from top to bottom: High, Medium, Low readiness
-            // Cols from left to right: Low, Medium, High AI skills
             const gridData = [
-                // High Readiness row
                 [
                     { label: 'High Readiness\nLow Skills', category: 'Needs Development', color: 'rgba(245, 158, 11, 0.2)' },
                     { label: 'High Readiness\nMedium Skills', category: 'Growth Drivers', color: 'rgba(16, 185, 129, 0.2)' },
                     { label: 'High Readiness\nHigh Skills', category: 'Growth Drivers', color: 'rgba(16, 185, 129, 0.3)' }
                 ],
-                // Medium Readiness row
                 [
                     { label: 'Medium Readiness\nLow Skills', category: 'Needs Support', color: 'rgba(239, 68, 68, 0.2)' },
                     { label: 'Medium Readiness\nMedium Skills', category: 'Steady Contributors', color: 'rgba(59, 130, 246, 0.2)' },
                     { label: 'Medium Readiness\nHigh Skills', category: 'Specialists in Progress', color: 'rgba(167, 139, 250, 0.2)' }
                 ],
-                // Low Readiness row
                 [
                     { label: 'Low Readiness\nLow Skills', category: 'Priority Development', color: 'rgba(239, 68, 68, 0.3)' },
                     { label: 'Low Readiness\nMedium Skills', category: 'Building Readiness', color: 'rgba(245, 158, 11, 0.2)' },
@@ -796,14 +1020,9 @@
                 ]
             ];
 
-            // Determine AI Skills Level position (X axis)
-            // Low: < 2, Medium: 2-3.5, High: > 3.5
             let xPos = avgProf < 2 ? 0 : avgProf <= 3.5 ? 1 : 2;
-            
-            // Determine Readiness position (Y axis) - inverted for display
             let yPos = readiness === 'High' ? 0 : readiness === 'Medium' ? 1 : 2;
 
-            // Create grid cells
             for (let row = 0; row < 3; row++) {
                 for (let col = 0; col < 3; col++) {
                     const cellData = gridData[row][col];
@@ -825,7 +1044,6 @@
                 }
             }
 
-            // Update position label
             const currentCell = gridData[yPos][xPos];
             const positionLabel = document.getElementById('gridPositionLabel');
             
@@ -860,7 +1078,7 @@
             positionLabel.innerHTML = `<strong>Position:</strong> ${currentCell.category} - ${description}`;
         }
 
-        function generateGapAnalysis(knowledgeGap, roleGap, avgProf, expected) {
+        function generateGapAnalysis(knowledgeGap, roleGap, avgProf, expected, domainAverages) {
             const container = document.getElementById('gapAnalysis');
             let html = '';
 
@@ -868,7 +1086,7 @@
                 html += `
                     <div class="gap-badge critical">
                         <span class="gap-icon">🔴</span>
-                        <span><strong>Generic AI Knowledge Gap:</strong> Average proficiency (${avgProf.toFixed(2)}) is below 2.0</span>
+                        <span><strong>Critical Knowledge Gap:</strong> Average proficiency (${avgProf.toFixed(2)}) is below 2.0</span>
                     </div>
                 `;
             }
@@ -882,22 +1100,21 @@
                 `;
             }
 
-            if (!knowledgeGap && !roleGap) {
-                html = `
-                    <div class="gap-badge" style="border-color: var(--success); background: rgba(16, 185, 129, 0.1);">
-                        <span class="gap-icon">✅</span>
-                        <span><strong>No Critical Gaps Identified:</strong> Employee meets or exceeds expectations</span>
+            const weakDomains = domainAverages.filter(d => d.average < 2.5);
+            if (weakDomains.length > 0) {
+                html += `
+                    <div class="gap-badge warning">
+                        <span class="gap-icon">📊</span>
+                        <span><strong>Priority Development Areas:</strong> ${weakDomains.map(d => d.name).join(', ')}</span>
                     </div>
                 `;
             }
 
-            // Add skill-specific gaps
-            const lowSkills = skills.filter(skill => ratings[skill.id] < 2);
-            if (lowSkills.length > 0) {
-                html += `
-                    <div class="gap-badge critical">
-                        <span class="gap-icon">📊</span>
-                        <span><strong>Critical Skills Needing Development:</strong> ${lowSkills.map(s => s.name).join(', ')}</span>
+            if (!knowledgeGap && !roleGap) {
+                html = `
+                    <div class="gap-badge" style="border-color: var(--success); background: rgba(16, 185, 129, 0.1);">
+                        <span class="gap-icon">✅</span>
+                        <span><strong>No Critical Gaps:</strong> Employee meets or exceeds expectations</span>
                     </div>
                 `;
             }
@@ -905,20 +1122,19 @@
             container.innerHTML = html;
         }
 
-        function generateDetailedBreakdown() {
+        function generateDetailedBreakdown(domainAverages) {
             const container = document.getElementById('detailedBreakdown');
             let html = '';
 
-            skills.forEach(skill => {
-                const score = ratings[skill.id];
-                const percentage = (score / 5) * 100;
-                const color = score >= 4 ? 'var(--success)' : score >= 3 ? 'var(--accent)' : score >= 2 ? 'var(--warning)' : 'var(--danger)';
+            domainAverages.forEach(domain => {
+                const percentage = (domain.average / 5) * 100;
+                const color = domain.average >= 4 ? 'var(--success)' : domain.average >= 3 ? 'var(--accent)' : domain.average >= 2 ? 'var(--warning)' : 'var(--danger)';
                 
                 html += `
                     <div style="margin-bottom: 1.5rem;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                            <span style="font-weight: 600;">${skill.name}</span>
-                            <span style="font-family: 'Space Mono', monospace; color: ${color}; font-weight: 700;">${score}/5</span>
+                            <span style="font-weight: 600;">${domain.name}</span>
+                            <span style="font-family: 'Space Mono', monospace; color: ${color}; font-weight: 700;">${domain.average.toFixed(2)}/5</span>
                         </div>
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: ${percentage}%; background: ${color};"></div>
@@ -930,7 +1146,36 @@
             container.innerHTML = html;
         }
 
-        // Initialize on load
+        function generateRoleAlignment(current, future, match) {
+            const container = document.getElementById('roleAlignment');
+            
+            let html = `
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="font-weight: 600; margin-bottom: 0.5rem;">Self-Assessment: ${match}</div>
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted);">Current Responsibilities:</div>
+                    ${current.length > 0 ? current.map(r => `<div style="padding: 0.5rem; background: var(--secondary); border-radius: 4px; margin-bottom: 0.25rem;">• ${r}</div>`).join('') : '<div style="color: var(--text-muted);">None selected</div>'}
+                </div>
+                <div>
+                    <div style="font-weight: 600; margin-bottom: 0.5rem; color: var(--accent);">Expected Future Responsibilities (12 months):</div>
+                    ${future.length > 0 ? future.map(r => `<div style="padding: 0.5rem; background: rgba(59, 130, 246, 0.1); border-radius: 4px; margin-bottom: 0.25rem;">• ${r}</div>`).join('') : '<div style="color: var(--text-muted);">None selected</div>'}
+                </div>
+            `;
+
+            const gap = future.filter(r => !current.includes(r));
+            if (gap.length > 0) {
+                html += `
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(245, 158, 11, 0.1); border-left: 3px solid var(--warning); border-radius: 4px;">
+                        <div style="font-weight: 600; margin-bottom: 0.5rem;">Development Focus:</div>
+                        <div style="color: var(--text-muted);">Prepare for: ${gap.join(', ')}</div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
         initializeAssessment();
     </script>
 </body>
