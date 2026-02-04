@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Skills Assessment Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0A0E27;
+            --secondary: #1E293B;
+            --accent: #3B82F6;
+            --accent-light: #60A5FA;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --text: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border: #334155;
+            --bg-card: #151B30;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--primary);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #60A5FA, #A78BFA, #EC4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-family: 'Space Mono', monospace;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            letter-spacing: 0.05em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.875rem;
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .skill-assessment {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .skill-category {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .skill-category:hover {
+            border-color: var(--accent-light);
+        }
+
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .skill-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .skill-score {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.25rem;
+            font-weight: 700;
+            padding: 0.5rem 1rem;
+            background: var(--secondary);
+            border-radius: 8px;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .rating-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .rating-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: var(--secondary);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .rating-btn:hover {
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--text);
+        }
+
+        .rating-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .rating-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .results-section {
+            margin-top: 3rem;
+            display: none;
+        }
+
+        .results-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient);
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .metric-description {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .nine-grid {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 1.5rem;
+        }
+
+        .grid-cell {
+            aspect-ratio: 1;
+            background: var(--secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .grid-cell:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .grid-cell.active {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(167, 139, 250, 0.3));
+            border: 2px solid var(--accent);
+        }
+
+        .grid-cell.active::after {
+            content: '●';
+            position: absolute;
+            font-size: 2rem;
+            color: var(--accent);
+            animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes ping {
+            75%, 100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .grid-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .grid-axes {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .axis-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .axis-arrow {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .gap-indicators {
+            display: grid;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .gap-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--secondary);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .gap-badge.critical {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .gap-badge.warning {
+            border-color: var(--warning);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .gap-icon {
+            font-size: 1.2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .btn:hover {
+            background: var(--accent-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .skill-description {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--secondary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-container {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1px;
+            }
+
+            .grid-cell {
+                padding: 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Skills Assessment</h1>
+            <p class="subtitle">Evaluate & Benchmark AI Competencies</p>
+        </header>
+
+        <div class="main-grid">
+            <div class="sidebar">
+                <div class="card">
+                    <h2 class="card-title">Employee Info</h2>
+                    <div class="form-group">
+                        <label>Employee Name</label>
+                        <input type="text" id="employeeName" placeholder="Enter name">
+                    </div>
+                    <div class="form-group">
+                        <label>Job Title</label>
+                        <input type="text" id="jobTitle" placeholder="Enter title">
+                    </div>
+                    <div class="form-group">
+                        <label>Expected AI Role</label>
+                        <select id="aiRole">
+                            <option value="">Select role</option>
+                            <option value="AI User">AI User</option>
+                            <option value="AI Enabler">AI Enabler</option>
+                            <option value="AI Leader">AI Leader</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Transformation Readiness</label>
+                        <select id="transformationReadiness">
+                            <option value="">Select readiness</option>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">Assessment Info</h2>
+                    <div style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+                        <p><strong>Rating Scale:</strong></p>
+                        <p style="margin-top: 0.5rem;">1 = No knowledge<br>
+                        2 = Basic awareness<br>
+                        3 = Intermediate<br>
+                        4 = Advanced<br>
+                        5 = Expert</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="skill-assessment" id="skillAssessment">
+                    <!-- Skills will be dynamically generated -->
+                </div>
+
+                <button class="btn" onclick="calculateResults()">Generate Assessment Report</button>
+
+                <div class="results-section" id="results">
+                    <h2 class="card-title" style="font-size: 2rem; margin-bottom: 2rem;">Assessment Results</h2>
+                    
+                    <div class="metrics-grid" id="metricsGrid"></div>
+
+                    <div class="nine-grid">
+                        <h3 class="card-title">9-Grid Talent Matrix</h3>
+                        <div class="grid-axes">
+                            <div class="axis-label">
+                                <span class="axis-arrow">→</span>
+                                <span>AI Skills Level (Low → Medium → High)</span>
+                            </div>
+                            <div class="axis-label">
+                                <span class="axis-arrow">↑</span>
+                                <span>Transformation Readiness (Low → Medium → High)</span>
+                            </div>
+                        </div>
+                        <div class="grid-container" id="nineGrid"></div>
+                        <div id="gridPositionLabel" style="margin-top: 1rem; padding: 1rem; background: var(--secondary); border-radius: 8px; text-align: center; font-weight: 600;"></div>
+                    </div>
+
+                    <div class="card" style="margin-top: 2rem;">
+                        <h3 class="card-title">Gap Analysis</h3>
+                        <div class="gap-indicators" id="gapAnalysis"></div>
+                    </div>
+
+                    <div class="card" style="margin-top: 2rem;">
+                        <h3 class="card-title">Detailed Skill Breakdown</h3>
+                        <div id="detailedBreakdown"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const skills = [
+            {
+                id: 'aiExposure',
+                name: 'AI Exposure',
+                description: 'Experience and familiarity with AI concepts and applications'
+            },
+            {
+                id: 'aiFundamentals',
+                name: 'AI Fundamentals',
+                description: 'Understanding of AI concepts and technologies (ML, NLP, GenAI)'
+            },
+            {
+                id: 'dataLiteracy',
+                name: 'Data Literacy',
+                description: 'Ability to read, analyze, and use data effectively'
+            },
+            {
+                id: 'aiTools',
+                name: 'AI Tools & Platforms',
+                description: 'Proficiency in AI software or platforms relevant to work'
+            },
+            {
+                id: 'prompting',
+                name: 'Prompting / Prompt Engineering',
+                description: 'Ability to effectively communicate with AI systems'
+            },
+            {
+                id: 'workflow',
+                name: 'Workflow Integration',
+                description: 'Embedding AI in daily workflow processes'
+            },
+            {
+                id: 'analytics',
+                name: 'Analytics / Decision Making',
+                description: 'Using AI to support business decisions'
+            },
+            {
+                id: 'security',
+                name: 'Security, Ethics & Governance',
+                description: 'Awareness of responsible AI usage'
+            },
+            {
+                id: 'innovation',
+                name: 'Innovation / Problem Solving',
+                description: 'Using AI creatively to solve problems'
+            }
+        ];
+
+        const ratings = {};
+
+        function initializeAssessment() {
+            const container = document.getElementById('skillAssessment');
+            
+            skills.forEach(skill => {
+                const skillDiv = document.createElement('div');
+                skillDiv.className = 'skill-category';
+                skillDiv.innerHTML = `
+                    <div class="skill-header">
+                        <div>
+                            <div class="skill-name">${skill.name}</div>
+                            <div class="skill-description">${skill.description}</div>
+                        </div>
+                        <div class="skill-score" id="score-${skill.id}">-</div>
+                    </div>
+                    <div class="rating-group" id="rating-${skill.id}">
+                        ${[1, 2, 3, 4, 5].map(rating => `
+                            <button class="rating-btn" onclick="setRating('${skill.id}', ${rating})">${rating}</button>
+                        `).join('')}
+                    </div>
+                    <div class="rating-labels">
+                        <span>No Knowledge</span>
+                        <span>Expert</span>
+                    </div>
+                `;
+                container.appendChild(skillDiv);
+            });
+        }
+
+        function setRating(skillId, rating) {
+            ratings[skillId] = rating;
+            
+            // Update UI
+            const buttons = document.querySelectorAll(`#rating-${skillId} .rating-btn`);
+            buttons.forEach((btn, index) => {
+                if (index + 1 === rating) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            document.getElementById(`score-${skillId}`).textContent = rating;
+        }
+
+        function calculateResults() {
+            const name = document.getElementById('employeeName').value;
+            const title = document.getElementById('jobTitle').value;
+            const role = document.getElementById('aiRole').value;
+            const readiness = document.getElementById('transformationReadiness').value;
+
+            if (!name || !title || !role || !readiness) {
+                alert('Please fill in all employee information including Transformation Readiness');
+                return;
+            }
+
+            if (Object.keys(ratings).length < skills.length) {
+                alert('Please rate all skills');
+                return;
+            }
+
+            const avgProficiency = Object.values(ratings).reduce((a, b) => a + b, 0) / skills.length;
+            const knowledgeGap = avgProficiency < 2;
+            
+            // Calculate role gap
+            let expectedLevel = 0;
+            let roleGap = false;
+            
+            if (role === 'AI User') {
+                expectedLevel = 2.5;
+                roleGap = avgProficiency < 2.5;
+            } else if (role === 'AI Enabler') {
+                expectedLevel = 3.5;
+                roleGap = avgProficiency < 3.5;
+            } else if (role === 'AI Leader') {
+                expectedLevel = 4;
+                roleGap = avgProficiency < 4;
+            }
+
+            // Show results
+            document.getElementById('results').classList.add('active');
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+
+            // Populate metrics
+            const metricsGrid = document.getElementById('metricsGrid');
+            metricsGrid.innerHTML = `
+                <div class="metric-card">
+                    <div class="metric-label">Average Proficiency</div>
+                    <div class="metric-value" style="color: ${avgProficiency >= 3 ? 'var(--success)' : avgProficiency >= 2 ? 'var(--warning)' : 'var(--danger)'}">
+                        ${avgProficiency.toFixed(2)}
+                    </div>
+                    <div class="metric-description">Across all 9 skill categories</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${(avgProficiency / 5) * 100}%"></div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Transformation Readiness</div>
+                    <div class="metric-value" style="color: ${readiness === 'High' ? 'var(--success)' : readiness === 'Medium' ? 'var(--accent)' : 'var(--warning)'}; font-size: 2rem;">
+                        ${readiness}
+                    </div>
+                    <div class="metric-description">Readiness for AI transformation</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${readiness === 'High' ? '100%' : readiness === 'Medium' ? '66%' : '33%'}"></div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Expected Level</div>
+                    <div class="metric-value" style="color: var(--accent)">
+                        ${expectedLevel.toFixed(1)}
+                    </div>
+                    <div class="metric-description">For ${role} role</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${(expectedLevel / 5) * 100}%"></div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Skill Level Status</div>
+                    <div class="metric-value" style="color: ${!roleGap ? 'var(--success)' : 'var(--warning)'}; font-size: 1.5rem;">
+                        ${!roleGap ? '✓ MEETS' : '⚠ GAP'}
+                    </div>
+                    <div class="metric-description">${!roleGap ? 'Meets role expectations' : 'Below expected level'}</div>
+                </div>
+            `;
+
+            // Generate 9-grid
+            generate9Grid(avgProficiency, readiness);
+
+            // Gap analysis
+            generateGapAnalysis(knowledgeGap, roleGap, avgProficiency, expectedLevel);
+
+            // Detailed breakdown
+            generateDetailedBreakdown();
+        }
+
+        function generate9Grid(avgProf, readiness) {
+            const grid = document.getElementById('nineGrid');
+            grid.innerHTML = '';
+
+            // Define grid labels based on your examples
+            // Rows from top to bottom: High, Medium, Low readiness
+            // Cols from left to right: Low, Medium, High AI skills
+            const gridData = [
+                // High Readiness row
+                [
+                    { label: 'High Readiness\nLow Skills', category: 'Needs Development', color: 'rgba(245, 158, 11, 0.2)' },
+                    { label: 'High Readiness\nMedium Skills', category: 'Growth Drivers', color: 'rgba(16, 185, 129, 0.2)' },
+                    { label: 'High Readiness\nHigh Skills', category: 'Growth Drivers', color: 'rgba(16, 185, 129, 0.3)' }
+                ],
+                // Medium Readiness row
+                [
+                    { label: 'Medium Readiness\nLow Skills', category: 'Needs Support', color: 'rgba(239, 68, 68, 0.2)' },
+                    { label: 'Medium Readiness\nMedium Skills', category: 'Steady Contributors', color: 'rgba(59, 130, 246, 0.2)' },
+                    { label: 'Medium Readiness\nHigh Skills', category: 'Specialists in Progress', color: 'rgba(167, 139, 250, 0.2)' }
+                ],
+                // Low Readiness row
+                [
+                    { label: 'Low Readiness\nLow Skills', category: 'Priority Development', color: 'rgba(239, 68, 68, 0.3)' },
+                    { label: 'Low Readiness\nMedium Skills', category: 'Building Readiness', color: 'rgba(245, 158, 11, 0.2)' },
+                    { label: 'Low Readiness\nHigh Skills', category: 'Reluctant Experts', color: 'rgba(245, 158, 11, 0.3)' }
+                ]
+            ];
+
+            // Determine AI Skills Level position (X axis)
+            // Low: < 2, Medium: 2-3.5, High: > 3.5
+            let xPos = avgProf < 2 ? 0 : avgProf <= 3.5 ? 1 : 2;
+            
+            // Determine Readiness position (Y axis) - inverted for display
+            let yPos = readiness === 'High' ? 0 : readiness === 'Medium' ? 1 : 2;
+
+            // Create grid cells
+            for (let row = 0; row < 3; row++) {
+                for (let col = 0; col < 3; col++) {
+                    const cellData = gridData[row][col];
+                    const cell = document.createElement('div');
+                    cell.className = 'grid-cell';
+                    cell.style.background = cellData.color;
+                    
+                    if (row === yPos && col === xPos) {
+                        cell.classList.add('active');
+                    }
+                    
+                    cell.innerHTML = `
+                        <div class="grid-label" style="line-height: 1.4;">
+                            <div style="font-weight: 700; margin-bottom: 0.25rem;">${cellData.category}</div>
+                            <div style="font-size: 0.7rem; opacity: 0.8;">${cellData.label.replace('\n', '<br>')}</div>
+                        </div>
+                    `;
+                    grid.appendChild(cell);
+                }
+            }
+
+            // Update position label
+            const currentCell = gridData[yPos][xPos];
+            const positionLabel = document.getElementById('gridPositionLabel');
+            
+            let description = '';
+            switch(currentCell.category) {
+                case 'Growth Drivers':
+                    description = 'Ready for advanced training & AI projects';
+                    break;
+                case 'Steady Contributors':
+                    description = 'Can handle applied AI in role';
+                    break;
+                case 'Specialists in Progress':
+                    description = 'Strong AI skills, need coaching on readiness';
+                    break;
+                case 'Needs Development':
+                    description = 'High potential, requires skill building';
+                    break;
+                case 'Needs Support':
+                    description = 'Requires both skill and readiness development';
+                    break;
+                case 'Building Readiness':
+                    description = 'Good skills, working on transformation mindset';
+                    break;
+                case 'Reluctant Experts':
+                    description = 'High skills but low adoption readiness';
+                    break;
+                case 'Priority Development':
+                    description = 'Requires comprehensive support program';
+                    break;
+            }
+            
+            positionLabel.innerHTML = `<strong>Position:</strong> ${currentCell.category} - ${description}`;
+        }
+
+        function generateGapAnalysis(knowledgeGap, roleGap, avgProf, expected) {
+            const container = document.getElementById('gapAnalysis');
+            let html = '';
+
+            if (knowledgeGap) {
+                html += `
+                    <div class="gap-badge critical">
+                        <span class="gap-icon">🔴</span>
+                        <span><strong>Generic AI Knowledge Gap:</strong> Average proficiency (${avgProf.toFixed(2)}) is below 2.0</span>
+                    </div>
+                `;
+            }
+
+            if (roleGap) {
+                html += `
+                    <div class="gap-badge warning">
+                        <span class="gap-icon">⚠️</span>
+                        <span><strong>Role-Specific Gap:</strong> Current level (${avgProf.toFixed(2)}) below expected (${expected.toFixed(1)})</span>
+                    </div>
+                `;
+            }
+
+            if (!knowledgeGap && !roleGap) {
+                html = `
+                    <div class="gap-badge" style="border-color: var(--success); background: rgba(16, 185, 129, 0.1);">
+                        <span class="gap-icon">✅</span>
+                        <span><strong>No Critical Gaps Identified:</strong> Employee meets or exceeds expectations</span>
+                    </div>
+                `;
+            }
+
+            // Add skill-specific gaps
+            const lowSkills = skills.filter(skill => ratings[skill.id] < 2);
+            if (lowSkills.length > 0) {
+                html += `
+                    <div class="gap-badge critical">
+                        <span class="gap-icon">📊</span>
+                        <span><strong>Critical Skills Needing Development:</strong> ${lowSkills.map(s => s.name).join(', ')}</span>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function generateDetailedBreakdown() {
+            const container = document.getElementById('detailedBreakdown');
+            let html = '';
+
+            skills.forEach(skill => {
+                const score = ratings[skill.id];
+                const percentage = (score / 5) * 100;
+                const color = score >= 4 ? 'var(--success)' : score >= 3 ? 'var(--accent)' : score >= 2 ? 'var(--warning)' : 'var(--danger)';
+                
+                html += `
+                    <div style="margin-bottom: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="font-weight: 600;">${skill.name}</span>
+                            <span style="font-family: 'Space Mono', monospace; color: ${color}; font-weight: 700;">${score}/5</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%; background: ${color};"></div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Initialize on load
+        initializeAssessment();
+    </script>
+</body>
+</html>
