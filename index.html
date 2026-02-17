@@ -3,572 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Skills Assessment Platform</title>
+    <title>AI Skills Assessment</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #0A0E27;
-            --secondary: #1E293B;
-            --accent: #3B82F6;
-            --accent-light: #60A5FA;
-            --success: #10B981;
-            --warning: #F59E0B;
-            --danger: #EF4444;
-            --text: #F8FAFC;
-            --text-muted: #94A3B8;
-            --border: #334155;
-            --bg-card: #151B30;
+            --primary: #0A0E27; --secondary: #1E293B; --accent: #3B82F6;
+            --accent-light: #60A5FA; --success: #10B981; --warning: #F59E0B;
+            --danger: #EF4444; --text: #F8FAFC; --text-muted: #94A3B8;
+            --border: #334155; --bg-card: #151B30;
             --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--primary);
-            color: var(--text);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        header {
-            text-align: center;
-            padding: 3rem 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
-            animation: pulse 8s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-        }
-
-        h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #60A5FA, #A78BFA, #EC4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            position: relative;
-            z-index: 1;
-        }
-
-        .subtitle {
-            font-family: 'Space Mono', monospace;
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            letter-spacing: 0.05em;
-            position: relative;
-            z-index: 1;
-        }
-
-        .main-grid {
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            position: sticky;
-            top: 2rem;
-            align-self: start;
-        }
-
-        .card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 2rem;
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            border-color: var(--accent);
-            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            color: var(--text);
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin: 3rem 0 1.5rem;
-            color: var(--text);
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--border);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 0.875rem;
-            background: var(--secondary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            font-family: 'DM Sans', sans-serif;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem;
-            background: var(--secondary);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .checkbox-item:hover {
-            background: rgba(59, 130, 246, 0.1);
-        }
-
-        .checkbox-item input[type="checkbox"] {
-            width: auto;
-            cursor: pointer;
-        }
-
-        .skill-assessment {
-            display: grid;
-            gap: 2rem;
-        }
-
-        .skill-category {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 2rem;
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
-        }
-
-        .skill-category:hover {
-            border-color: var(--accent-light);
-        }
-
-        .skill-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1.5rem;
-        }
-
-        .skill-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text);
-        }
-
-        .skill-score {
-            font-family: 'Space Mono', monospace;
-            font-size: 1.25rem;
-            font-weight: 700;
-            padding: 0.5rem 1rem;
-            background: var(--secondary);
-            border-radius: 8px;
-            min-width: 60px;
-            text-align: center;
-        }
-
-        .question-text {
-            font-size: 0.95rem;
-            color: var(--text);
-            margin-bottom: 1rem;
-            line-height: 1.6;
-            padding: 1rem;
-            background: rgba(59, 130, 246, 0.05);
-            border-left: 3px solid var(--accent);
-            border-radius: 4px;
-        }
-
-        .rating-group {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .rating-btn {
-            flex: 1;
-            padding: 0.75rem;
-            background: var(--secondary);
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .rating-btn:hover {
-            border-color: var(--accent);
-            background: rgba(59, 130, 246, 0.1);
-            color: var(--text);
-        }
-
-        .rating-btn.active {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: white;
-            transform: scale(1.05);
-        }
-
-        .rating-labels {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 0.5rem;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-family: 'Space Mono', monospace;
-        }
-
-        .results-section {
-            margin-top: 3rem;
-            display: none;
-        }
-
-        .results-section.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .metric-card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 2rem;
-            border: 1px solid var(--border);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .metric-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--gradient);
-        }
-
-        .metric-label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.5rem;
-        }
-
-        .metric-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            font-family: 'Space Mono', monospace;
-        }
-
-        .metric-description {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-top: 0.5rem;
-        }
-
-        .nine-grid {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 2rem;
-            border: 1px solid var(--border);
-            margin-top: 2rem;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1px;
-            background: var(--border);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            margin-top: 1.5rem;
-        }
-
-        .grid-cell {
-            aspect-ratio: 1;
-            background: var(--secondary);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-
-        .grid-cell:hover {
-            background: rgba(59, 130, 246, 0.1);
-        }
-
-        .grid-cell.active {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(167, 139, 250, 0.3));
-            border: 2px solid var(--accent);
-        }
-
-        .grid-cell.active::after {
-            content: '●';
-            position: absolute;
-            font-size: 2rem;
-            color: var(--accent);
-            animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
-        }
-
-        @keyframes ping {
-            75%, 100% {
-                transform: scale(1.5);
-                opacity: 0;
-            }
-        }
-
-        .grid-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-align: center;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .grid-axes {
-            display: grid;
-            grid-template-columns: 100px 1fr;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .axis-label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .axis-arrow {
-            font-size: 1.5rem;
-            color: var(--accent);
-        }
-
-        .gap-indicators {
-            display: grid;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .gap-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: var(--secondary);
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            font-size: 0.9rem;
-        }
-
-        .gap-badge.critical {
-            border-color: var(--danger);
-            background: rgba(239, 68, 68, 0.1);
-        }
-
-        .gap-badge.warning {
-            border-color: var(--warning);
-            background: rgba(245, 158, 11, 0.1);
-        }
-
-        .gap-icon {
-            font-size: 1.2rem;
-        }
-
-        .btn {
-            padding: 1rem 2rem;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 1rem;
-            font-family: 'DM Sans', sans-serif;
-        }
-
-        .btn:hover {
-            background: var(--accent-light);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .skill-description {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 0.5rem;
-            line-height: 1.5;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: var(--secondary);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 1rem;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--gradient);
-            border-radius: 4px;
-            transition: width 0.5s ease;
-        }
-
-        .progress-indicator {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--secondary);
-            z-index: 1000;
-        }
-
-        .progress-indicator-fill {
-            height: 100%;
-            background: var(--gradient);
-            transition: width 0.3s ease;
-        }
-
-        @media (max-width: 1024px) {
-            .main-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar {
-                position: static;
-            }
-
-            h1 {
-                font-size: 2.5rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-
-            .metrics-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .grid-container {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 1px;
-            }
-
-            .grid-cell {
-                padding: 1rem;
-                font-size: 0.8rem;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--primary); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .progress-indicator { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: var(--secondary); z-index: 1000; }
+        .progress-indicator-fill { height: 100%; background: var(--gradient); transition: width 0.3s ease; }
+        header { text-align: center; padding: 3rem 0; position: relative; overflow: hidden; }
+        header::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%); animation: pulse 8s ease-in-out infinite; }
+        @keyframes pulse { 0%,100%{transform:scale(1);opacity:0.5} 50%{transform:scale(1.1);opacity:0.8} }
+        h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 1rem; background: linear-gradient(135deg,#60A5FA,#A78BFA,#EC4899); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; position:relative; z-index:1; }
+        .subtitle { font-family: 'Space Mono', monospace; color: var(--text-muted); font-size: 1.1rem; letter-spacing: 0.05em; position: relative; z-index: 1; }
+        .main-grid { display: grid; grid-template-columns: 320px 1fr; gap: 2rem; margin-top: 3rem; }
+        .sidebar { display: flex; flex-direction: column; gap: 1.5rem; position: sticky; top: 2rem; align-self: start; }
+        .card { background: var(--bg-card); border-radius: 16px; padding: 2rem; border: 1px solid var(--border); transition: all 0.3s ease; }
+        .card:hover { border-color: var(--accent); box-shadow: 0 8px 32px rgba(59,130,246,0.15); transform: translateY(-2px); }
+        .card-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text); }
+        .section-title { font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; color: var(--text); padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+        .form-group { margin-bottom: 1.5rem; }
+        label { display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        input, select { width: 100%; padding: 0.875rem; background: var(--secondary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 1rem; transition: all 0.3s ease; }
+        input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+        select option { background: var(--secondary); }
+        .checkbox-group { display: flex; flex-direction: column; gap: 0.75rem; }
+        .checkbox-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--secondary); border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-size: 1rem; color: var(--text); font-weight: normal; text-transform: none; letter-spacing: normal; }
+        .checkbox-item:hover { background: rgba(59,130,246,0.1); }
+        .checkbox-item input[type="checkbox"] { width: auto; cursor: pointer; accent-color: var(--accent); }
+        .skill-assessment { display: grid; gap: 2rem; }
+        .skill-category { background: var(--bg-card); border-radius: 16px; padding: 2rem; border: 1px solid var(--border); transition: all 0.3s ease; }
+        .skill-category:hover { border-color: var(--accent-light); }
+        .skill-category.answered { border-color: rgba(16,185,129,0.4); }
+        .skill-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
+        .skill-name { font-size: 1rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+        .skill-score { font-family: 'Space Mono', monospace; font-size: 1.25rem; font-weight: 700; padding: 0.5rem 1rem; background: var(--secondary); border-radius: 8px; min-width: 60px; text-align: center; transition: all 0.3s ease; }
+        .skill-score.rated { background: var(--accent); color: white; }
+        .question-text { font-size: 1rem; color: var(--text); margin-bottom: 1rem; line-height: 1.6; padding: 1rem; background: rgba(59,130,246,0.05); border-left: 3px solid var(--accent); border-radius: 4px; }
+        .rating-group { display: flex; gap: 0.5rem; margin-top: 1rem; }
+        .rating-btn { flex: 1; padding: 0.75rem; background: var(--secondary); border: 2px solid var(--border); border-radius: 8px; color: var(--text-muted); cursor: pointer; transition: all 0.3s ease; font-weight: 600; font-size: 0.9rem; }
+        .rating-btn:hover { border-color: var(--accent); background: rgba(59,130,246,0.1); color: var(--text); }
+        .rating-btn.active { background: var(--accent); border-color: var(--accent); color: white; transform: scale(1.05); }
+        .rating-labels { display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted); font-family: 'Space Mono', monospace; }
+        .progress-bar { width: 100%; height: 8px; background: var(--secondary); border-radius: 4px; overflow: hidden; margin-top: 1rem; }
+        .progress-fill { height: 100%; background: var(--gradient); border-radius: 4px; transition: width 0.5s ease; }
+        .btn { padding: 1rem 2rem; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; width: 100%; margin-top: 1rem; font-family: 'DM Sans', sans-serif; }
+        .btn:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(59,130,246,0.3); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+        .results-section { margin-top: 3rem; display: none; }
+        .results-section.active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .metric-card { background: var(--bg-card); border-radius: 16px; padding: 2rem; border: 1px solid var(--border); position: relative; overflow: hidden; }
+        .metric-card::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; background:var(--gradient); }
+        .metric-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        .metric-value { font-size: 2.5rem; font-weight: 700; font-family: 'Space Mono', monospace; }
+        .metric-description { font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem; }
+        .nine-grid { background: var(--bg-card); border-radius: 16px; padding: 2rem; border: 1px solid var(--border); margin-top: 2rem; }
+        .grid-container { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-top: 1.5rem; }
+        .grid-cell { aspect-ratio: 1; background: var(--secondary); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; position: relative; transition: all 0.3s ease; }
+        .grid-cell.active { background: linear-gradient(135deg,rgba(59,130,246,0.3),rgba(167,139,250,0.3)); border: 2px solid var(--accent); }
+        .grid-cell.active::after { content:'●'; position:absolute; font-size:2rem; color:var(--accent); animation:ping 2s cubic-bezier(0,0,0.2,1) infinite; }
+        @keyframes ping { 75%,100%{transform:scale(1.5);opacity:0} }
+        .grid-label { font-size: 0.75rem; font-weight: 600; text-align: center; color: var(--text-muted); line-height: 1.4; }
+        .grid-axes { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
+        .axis-label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); }
+        .axis-arrow { font-size: 1.2rem; color: var(--accent); }
+        .gap-indicators { display: grid; gap: 1rem; margin-top: 1rem; }
+        .gap-badge { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem 1rem; background: var(--secondary); border-radius: 8px; border: 1px solid var(--border); font-size: 0.9rem; }
+        .gap-badge.critical { border-color: var(--danger); background: rgba(239,68,68,0.1); }
+        .gap-badge.warning { border-color: var(--warning); background: rgba(245,158,11,0.1); }
+        .gap-badge.ok { border-color: var(--success); background: rgba(16,185,129,0.1); }
+        .gap-icon { font-size: 1.1rem; margin-top: 0.1rem; flex-shrink: 0; }
+        .thankyou-screen { display: none; text-align: center; padding: 6rem 2rem; animation: fadeIn 0.6s ease; }
+        .thankyou-screen.active { display: block; }
+        .thankyou-icon { font-size: 5rem; margin-bottom: 1.5rem; }
+        .thankyou-title { font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg,#60A5FA,#A78BFA); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom: 1rem; }
+        .thankyou-text { color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto 2rem; line-height: 1.8; }
+        .spinner { display: inline-block; width: 18px; height: 18px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 0.8s linear infinite; margin-right: 0.5rem; vertical-align: middle; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .toast { position: fixed; bottom: 2rem; right: 2rem; padding: 1rem 1.5rem; border-radius: 8px; font-weight: 600; z-index: 9999; animation: slideIn 0.3s ease; max-width: 340px; }
+        .toast.success { background: var(--success); color: white; }
+        .toast.error { background: var(--danger); color: white; }
+        @keyframes slideIn { from{transform:translateX(120%)} to{transform:translateX(0)} }
+        @media (max-width: 1024px) { .main-grid { grid-template-columns: 1fr; } .sidebar { position: static; } h1 { font-size: 2.5rem; } }
+        @media (max-width: 768px) { .container { padding: 1rem; } .metrics-grid { grid-template-columns: 1fr; } .grid-cell { padding: 0.75rem; } }
     </style>
 </head>
 <body>
-    <div class="progress-indicator">
-        <div class="progress-indicator-fill" id="progressBar"></div>
-    </div>
+<div class="progress-indicator"><div class="progress-indicator-fill" id="progressBar"></div></div>
 
-    <div class="container">
-        <header>
-            <h1>AI Skills Assessment</h1>
-            <p class="subtitle">Behavior-Anchored AI Competency Evaluation</p>
-        </header>
+<div class="container">
+    <header>
+        <h1>AI Skills Assessment</h1>
+        <p class="subtitle">Behavior-Anchored AI Competency Evaluation</p>
+    </header>
 
+    <!-- ═══ ASSESSMENT FORM ═══ -->
+    <div id="assessmentForm">
         <div class="main-grid">
             <div class="sidebar">
                 <div class="card">
@@ -585,13 +124,9 @@
                         <label>Main Role Category</label>
                         <select id="roleCategory">
                             <option value="">Select category</option>
-                            <option value="Engineering">Engineering</option>
-                            <option value="Product">Product</option>
-                            <option value="Operations">Operations</option>
-                            <option value="Sales">Sales</option>
-                            <option value="Marketing">Marketing</option>
-                            <option value="Leadership">Leadership</option>
-                            <option value="Other">Other</option>
+                            <option>Engineering</option><option>Product</option>
+                            <option>Operations</option><option>Sales</option>
+                            <option>Marketing</option><option>Leadership</option><option>Other</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -607,9 +142,7 @@
                         <label>Transformation Readiness</label>
                         <select id="transformationReadiness">
                             <option value="">Select readiness</option>
-                            <option value="Low">Low</option>
-                            <option value="Medium">Medium</option>
-                            <option value="High">High</option>
+                            <option>Low</option><option>Medium</option><option>High</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -626,29 +159,29 @@
                 </div>
 
                 <div class="card">
-                    <h2 class="card-title">Assessment Guide</h2>
-                    <div style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
-                        <p><strong>Rating Scale:</strong></p>
-                        <p style="margin-top: 0.5rem;">
-                        1 = No exposure/knowledge<br>
-                        2 = Basic awareness<br>
-                        3 = Regular guided usage<br>
-                        4 = Confident application<br>
-                        5 = Expert/self-initiated
-                        </p>
+                    <h2 class="card-title">Rating Guide</h2>
+                    <div style="font-size:0.9rem;color:var(--text-muted);line-height:2;">
+                        <strong style="color:var(--danger);">1</strong> — No exposure<br>
+                        <strong style="color:var(--warning);">2</strong> — Basic awareness<br>
+                        <strong style="color:var(--accent);">3</strong> — Regular guided use<br>
+                        <strong style="color:var(--accent-light);">4</strong> — Confident application<br>
+                        <strong style="color:var(--success);">5</strong> — Expert / self-initiated
+                    </div>
+                    <div style="margin-top:1.5rem;">
+                        <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.5rem;">Completion</div>
+                        <div id="completionText" style="font-family:'Space Mono',monospace;font-weight:700;font-size:1.25rem;color:var(--accent);">0 / 36</div>
+                        <div class="progress-bar"><div class="progress-fill" id="completionBar" style="width:0%"></div></div>
                     </div>
                 </div>
             </div>
 
             <div class="content">
-                <div class="skill-assessment" id="skillAssessment">
-                    <!-- Skills will be dynamically generated -->
-                </div>
+                <div class="skill-assessment" id="skillAssessment"></div>
 
                 <h2 class="section-title">Role Impact & Alignment</h2>
                 <div class="card">
                     <div class="form-group">
-                        <label>Does your current AI skill level match what is expected for your AI Role?</label>
+                        <label>Does your current AI skill level match your expected AI Role?</label>
                         <select id="roleMatch">
                             <option value="">Select option</option>
                             <option value="Exceeds">Exceeds expectations</option>
@@ -657,526 +190,394 @@
                             <option value="Unsure">Unsure</option>
                         </select>
                     </div>
-                    
                     <div class="form-group">
                         <label>Which AI responsibilities are part of your role TODAY?</label>
                         <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="currentResponsibilities" value="Usage only">
-                                <span>Usage only</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="currentResponsibilities" value="Enablement of others">
-                                <span>Enablement of others</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="currentResponsibilities" value="Design or integration">
-                                <span>Design or integration</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="currentResponsibilities" value="Leadership and strategy">
-                                <span>Leadership and strategy</span>
-                            </label>
+                            <label class="checkbox-item"><input type="checkbox" name="currentResp" value="Usage only"> Usage only</label>
+                            <label class="checkbox-item"><input type="checkbox" name="currentResp" value="Enablement of others"> Enablement of others</label>
+                            <label class="checkbox-item"><input type="checkbox" name="currentResp" value="Design or integration"> Design or integration</label>
+                            <label class="checkbox-item"><input type="checkbox" name="currentResp" value="Leadership and strategy"> Leadership and strategy</label>
                         </div>
                     </div>
-
                     <div class="form-group">
-                        <label>Which AI responsibilities SHOULD be part of your role within 12 months?</label>
+                        <label>Which AI responsibilities should be part of your role in 12 months?</label>
                         <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="futureResponsibilities" value="Usage only">
-                                <span>Usage only</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="futureResponsibilities" value="Enablement of others">
-                                <span>Enablement of others</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="futureResponsibilities" value="Design or integration">
-                                <span>Design or integration</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="futureResponsibilities" value="Leadership and strategy">
-                                <span>Leadership and strategy</span>
-                            </label>
+                            <label class="checkbox-item"><input type="checkbox" name="futureResp" value="Usage only"> Usage only</label>
+                            <label class="checkbox-item"><input type="checkbox" name="futureResp" value="Enablement of others"> Enablement of others</label>
+                            <label class="checkbox-item"><input type="checkbox" name="futureResp" value="Design or integration"> Design or integration</label>
+                            <label class="checkbox-item"><input type="checkbox" name="futureResp" value="Leadership and strategy"> Leadership and strategy</label>
                         </div>
                     </div>
                 </div>
 
-                <button class="btn" onclick="calculateResults()">Generate Assessment Report</button>
-
-                <div class="results-section" id="results">
-                    <h2 class="card-title" style="font-size: 2rem; margin-bottom: 2rem;">Assessment Results</h2>
-                    
-                    <div class="metrics-grid" id="metricsGrid"></div>
-
-                    <div class="nine-grid">
-                        <h3 class="card-title">9-Grid Talent Matrix</h3>
-                        <div class="grid-axes">
-                            <div class="axis-label">
-                                <span class="axis-arrow">→</span>
-                                <span>AI Skills Level (Low → Medium → High)</span>
-                            </div>
-                            <div class="axis-label">
-                                <span class="axis-arrow">↑</span>
-                                <span>Transformation Readiness (Low → Medium → High)</span>
-                            </div>
-                        </div>
-                        <div class="grid-container" id="nineGrid"></div>
-                        <div id="gridPositionLabel" style="margin-top: 1rem; padding: 1rem; background: var(--secondary); border-radius: 8px; text-align: center; font-weight: 600;"></div>
-                    </div>
-
-                    <div class="card" style="margin-top: 2rem;">
-                        <h3 class="card-title">Gap Analysis</h3>
-                        <div class="gap-indicators" id="gapAnalysis"></div>
-                    </div>
-
-                    <div class="card" style="margin-top: 2rem;">
-                        <h3 class="card-title">Detailed Skill Breakdown</h3>
-                        <div id="detailedBreakdown"></div>
-                    </div>
-
-                    <div class="card" style="margin-top: 2rem;">
-                        <h3 class="card-title">Role Alignment Summary</h3>
-                        <div id="roleAlignment"></div>
-                    </div>
-                </div>
+                <button class="btn" id="submitBtn" onclick="handleSubmit()">Submit & View My Results</button>
             </div>
         </div>
     </div>
 
-    <script>
-        const skillDomains = [
-            {
-                name: 'AI Exposure and Awareness',
-                questions: [
-                    'How frequently do you actively use AI tools in your daily work?',
-                    'How many different AI tools or AI-powered features have you used hands-on in the last 3 months?',
-                    'How often do you participate in AI-related learning, training, or knowledge sharing?',
-                    'How often do you discuss AI use cases or limitations with colleagues or customers?'
-                ]
-            },
-            {
-                name: 'AI Fundamentals',
-                questions: [
-                    'How well do you understand the difference between automation, machine learning, and generative AI?',
-                    'How confident are you explaining in simple terms how generative AI produces outputs?',
-                    'How well do you understand the strengths and limitations of AI models (hallucinations, bias, non-determinism)?',
-                    'How confident are you choosing when AI is appropriate versus when it should not be used?'
-                ]
-            },
-            {
-                name: 'Data Literacy',
-                questions: [
-                    'How confident are you interpreting data outputs used by AI systems?',
-                    'How well do you understand data quality issues and their impact on AI results?',
-                    'How familiar are you with the data sources AI tools rely on in your domain?',
-                    'How confident are you validating AI-generated insights against data or business logic?'
-                ]
-            },
-            {
-                name: 'AI Tools and Platforms',
-                questions: [
-                    'How many AI tools or AI-enabled features do you actively use without assistance?',
-                    'How confident are you using AI tools to complete real work tasks end-to-end?',
-                    'How well do you understand the limitations and risks of the AI tools you use?',
-                    'How often do you evaluate or compare AI tools for suitability in your work?'
-                ]
-            },
-            {
-                name: 'Prompting and Interaction Design',
-                questions: [
-                    'How confident are you writing prompts that produce useful and reliable outputs?',
-                    'How often do you iterate or refine prompts to improve results?',
-                    'How well do you adapt prompts for different goals (analysis, creativity, summarization, automation)?',
-                    'How confident are you assessing whether an AI response is incorrect, incomplete, or misleading?'
-                ]
-            },
-            {
-                name: 'Workflow Integration and Orchestration',
-                questions: [
-                    'Have you applied AI to automate or improve a recurring task or workflow?',
-                    'How confident are you identifying processes where AI could improve efficiency or quality?',
-                    'How often do you combine AI tools with other systems or workflows?',
-                    'How confident are you documenting or explaining AI-enabled workflows to others?'
-                ]
-            },
-            {
-                name: 'Analytics and Decision Making',
-                questions: [
-                    'How often do you use AI-generated insights to support decisions?',
-                    'How confident are you validating AI outputs before acting on them?',
-                    'How well do you understand the assumptions behind AI-generated recommendations?',
-                    'How confident are you explaining AI-supported decisions to stakeholders?'
-                ]
-            },
-            {
-                name: 'Security, Ethics and Governance',
-                questions: [
-                    'How familiar are you with company policies related to AI usage and data protection?',
-                    'How confident are you identifying sensitive or restricted data in AI usage?',
-                    'How well do you understand ethical risks (bias, fairness, misuse)?',
-                    'How confident are you escalating or challenging inappropriate AI usage?'
-                ]
-            },
-            {
-                name: 'Innovation and Problem Solving',
-                questions: [
-                    'Have you proposed or implemented an AI-driven improvement or solution?',
-                    'How often do you experiment with AI to explore new ways of working?',
-                    'How confident are you turning AI experimentation into repeatable outcomes?',
-                    'How often do you share AI-driven learnings or best practices with others?'
-                ]
-            }
-        ];
+    <!-- ═══ RESULTS ═══ -->
+    <div class="results-section" id="results">
+        <h2 style="font-size:2rem;font-weight:700;margin-bottom:2rem;">Your Assessment Results</h2>
+        <div class="metrics-grid" id="metricsGrid"></div>
+        <div class="nine-grid">
+            <h3 class="card-title">9-Grid Talent Matrix</h3>
+            <div class="grid-axes">
+                <div class="axis-label"><span class="axis-arrow">→</span> AI Skills Level (Low → Medium → High)</div>
+                <div class="axis-label"><span class="axis-arrow">↑</span> Transformation Readiness (Low → Medium → High)</div>
+            </div>
+            <div class="grid-container" id="nineGrid"></div>
+            <div id="gridPositionLabel" style="margin-top:1rem;padding:1rem;background:var(--secondary);border-radius:8px;text-align:center;font-weight:600;"></div>
+        </div>
+        <div class="card" style="margin-top:2rem;">
+            <h3 class="card-title">Gap Analysis</h3>
+            <div class="gap-indicators" id="gapAnalysis"></div>
+        </div>
+        <div class="card" style="margin-top:2rem;">
+            <h3 class="card-title">Skill Domain Breakdown</h3>
+            <div id="detailedBreakdown"></div>
+        </div>
+        <div class="card" style="margin-top:2rem;">
+            <h3 class="card-title">Role Alignment Summary</h3>
+            <div id="roleAlignment"></div>
+        </div>
+        <button class="btn" id="doneBtn" onclick="saveAndFinish()" style="margin-top:2rem;background:var(--success);">
+            ✓ Save & Finish
+        </button>
+    </div>
 
-        const ratings = {};
-        let questionCounter = 0;
+    <!-- ═══ THANK YOU ═══ -->
+    <div class="thankyou-screen" id="thankYouScreen">
+        <div class="thankyou-icon">🎯</div>
+        <div class="thankyou-title">Assessment Complete!</div>
+        <p class="thankyou-text">
+            Thank you for completing the AI Skills Assessment.<br>
+            Your results have been saved. Your manager will use this as part of the team's AI development planning — you'll receive feedback as part of your review cycle.
+        </p>
+        <div style="padding:1.5rem 2rem;background:var(--bg-card);border-radius:12px;display:inline-block;border:1px solid var(--border);min-width:280px;">
+            <div style="color:var(--text-muted);font-size:0.85rem;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.5rem;">Your Grid Position</div>
+            <div id="finalGridPosition" style="font-size:1.5rem;font-weight:700;color:var(--accent-light);"></div>
+            <div id="finalScore" style="font-size:0.9rem;color:var(--text-muted);margin-top:0.25rem;"></div>
+        </div>
+    </div>
+</div>
 
-        function initializeAssessment() {
-            const container = document.getElementById('skillAssessment');
-            
-            skillDomains.forEach((domain, domainIndex) => {
-                const sectionTitle = document.createElement('h2');
-                sectionTitle.className = 'section-title';
-                sectionTitle.textContent = domain.name;
-                container.appendChild(sectionTitle);
+<script>
+// ══════════════════════════════════════════════
+// ⚠️  PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL
+// ══════════════════════════════════════════════
+const GOOGLE_SCRIPT_URL = "https://script.google.com/a/macros/visma.com/s/AKfycbwYO6LrR-vt4vBernut3ivZmqHHMkcX3oULnimuC7LBDP6Pd2WL3oNhaAAeQSNLo1P2Zg/exec";
+// ══════════════════════════════════════════════
 
-                domain.questions.forEach((question, qIndex) => {
-                    const questionId = `q${domainIndex}_${qIndex}`;
-                    questionCounter++;
-                    
-                    const skillDiv = document.createElement('div');
-                    skillDiv.className = 'skill-category';
-                    skillDiv.innerHTML = `
-                        <div class="skill-header">
-                            <div style="flex: 1;">
-                                <div class="skill-name">Question ${questionCounter}</div>
-                                <div class="question-text">${question}</div>
-                            </div>
-                            <div class="skill-score" id="score-${questionId}">-</div>
-                        </div>
-                        <div class="rating-group" id="rating-${questionId}">
-                            ${[1, 2, 3, 4, 5].map(rating => `
-                                <button class="rating-btn" onclick="setRating('${questionId}', ${rating})">${rating}</button>
-                            `).join('')}
-                        </div>
-                        <div class="rating-labels">
-                            <span>No Knowledge</span>
-                            <span>Expert</span>
-                        </div>
-                    `;
-                    container.appendChild(skillDiv);
-                });
-            });
+const skillDomains = [
+    { name: 'A. AI Exposure and Awareness', questions: [
+        'How frequently do you actively use AI tools in your daily work?',
+        'How many different AI tools or AI-powered features have you used hands-on in the last 3 months?',
+        'How often do you participate in AI-related learning, training, or knowledge sharing?',
+        'How often do you discuss AI use cases or limitations with colleagues or customers?'
+    ]},
+    { name: 'B. AI Fundamentals', questions: [
+        'How well do you understand the difference between automation, machine learning, and generative AI?',
+        'How confident are you explaining in simple terms how generative AI produces outputs?',
+        'How well do you understand the strengths and limitations of AI models (e.g. hallucinations, bias, non-determinism)?',
+        'How confident are you in choosing when AI is appropriate versus when it should not be used?'
+    ]},
+    { name: 'C. Data Literacy', questions: [
+        'How confident are you interpreting data outputs used by AI systems?',
+        'How well do you understand data quality issues and their impact on AI results?',
+        'How familiar are you with the data sources AI tools rely on in your domain?',
+        'How confident are you validating AI-generated insights against data or business logic?'
+    ]},
+    { name: 'D. AI Tools and Platforms', questions: [
+        'How many AI tools or AI-enabled features do you actively use without assistance?',
+        'How confident are you using AI tools to complete real work tasks end-to-end?',
+        'How well do you understand the limitations and risks of the AI tools you use?',
+        'How often do you evaluate or compare AI tools for suitability in your work?'
+    ]},
+    { name: 'E. Prompting and Interaction Design', questions: [
+        'How confident are you writing prompts that produce useful and reliable outputs?',
+        'How often do you iterate or refine prompts to improve results?',
+        'How well do you adapt prompts for different goals (analysis, creativity, summarization, automation)?',
+        'How confident are you assessing whether an AI response is incorrect, incomplete, or misleading?'
+    ]},
+    { name: 'F. Workflow Integration and Orchestration', questions: [
+        'Have you applied AI to automate or improve a recurring task or workflow?',
+        'How confident are you identifying processes where AI could improve efficiency or quality?',
+        'How often do you combine AI tools with other systems or workflows?',
+        'How confident are you documenting or explaining AI-enabled workflows to others?'
+    ]},
+    { name: 'G. Analytics and Decision Making', questions: [
+        'How often do you use AI-generated insights to support decisions?',
+        'How confident are you validating AI outputs before acting on them?',
+        'How well do you understand the assumptions behind AI-generated recommendations?',
+        'How confident are you explaining AI-supported decisions to stakeholders?'
+    ]},
+    { name: 'H. Security, Ethics and Governance', questions: [
+        'How familiar are you with company policies related to AI usage and data protection?',
+        'How confident are you identifying sensitive or restricted data in AI usage?',
+        'How well do you understand ethical risks such as bias, fairness, or misuse?',
+        'How confident are you escalating or challenging inappropriate AI usage?'
+    ]},
+    { name: 'I. Innovation and Problem Solving', questions: [
+        'Have you proposed or implemented an AI-driven improvement or solution?',
+        'How often do you experiment with AI to explore new ways of working?',
+        'How confident are you turning AI experimentation into repeatable outcomes?',
+        'How often do you share AI-driven learnings or best practices with others?'
+    ]}
+];
 
-            updateProgress();
-        }
+const ratings = {};
+const TOTAL_QUESTIONS = 36;
+let computedResults = null;
 
-        function setRating(questionId, rating) {
-            ratings[questionId] = rating;
-            
-            const buttons = document.querySelectorAll(`#rating-${questionId} .rating-btn`);
-            buttons.forEach((btn, index) => {
-                if (index + 1 === rating) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-            
-            document.getElementById(`score-${questionId}`).textContent = rating;
-            updateProgress();
-        }
-
-        function updateProgress() {
-            const totalQuestions = questionCounter;
-            const answeredQuestions = Object.keys(ratings).length;
-            const progress = (answeredQuestions / totalQuestions) * 100;
-            document.getElementById('progressBar').style.width = progress + '%';
-        }
-
-        function calculateResults() {
-            const name = document.getElementById('employeeName').value;
-            const title = document.getElementById('jobTitle').value;
-            const roleCategory = document.getElementById('roleCategory').value;
-            const role = document.getElementById('aiRole').value;
-            const readiness = document.getElementById('transformationReadiness').value;
-            const context = document.getElementById('aiContext').value;
-            const roleMatch = document.getElementById('roleMatch').value;
-
-            if (!name || !title || !roleCategory || !role || !readiness || !context || !roleMatch) {
-                alert('Please fill in all employee information fields');
-                return;
-            }
-
-            if (Object.keys(ratings).length < questionCounter) {
-                alert('Please answer all questions before generating the report');
-                return;
-            }
-
-            // Calculate domain averages
-            const domainAverages = skillDomains.map((domain, domainIndex) => {
-                const domainRatings = domain.questions.map((_, qIndex) => ratings[`q${domainIndex}_${qIndex}`]);
-                const avg = domainRatings.reduce((a, b) => a + b, 0) / domainRatings.length;
-                return { name: domain.name, average: avg };
-            });
-
-            const avgProficiency = domainAverages.reduce((sum, d) => sum + d.average, 0) / domainAverages.length;
-            const knowledgeGap = avgProficiency < 2;
-            
-            // Calculate role gap
-            let expectedLevel = 0;
-            let roleGap = false;
-            
-            if (role === 'AI User') {
-                expectedLevel = 2.5;
-                roleGap = avgProficiency < 2.5;
-            } else if (role === 'AI Enabler') {
-                expectedLevel = 3.5;
-                roleGap = avgProficiency < 3.5;
-            } else if (role === 'AI Leader') {
-                expectedLevel = 4;
-                roleGap = avgProficiency < 4;
-            }
-
-            // Get responsibilities
-            const currentResp = Array.from(document.querySelectorAll('input[name="currentResponsibilities"]:checked'))
-                .map(el => el.value);
-            const futureResp = Array.from(document.querySelectorAll('input[name="futureResponsibilities"]:checked'))
-                .map(el => el.value);
-
-            // Show results
-            document.getElementById('results').classList.add('active');
-            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
-
-            // Populate metrics
-            const metricsGrid = document.getElementById('metricsGrid');
-            metricsGrid.innerHTML = `
-                <div class="metric-card">
-                    <div class="metric-label">Average Proficiency</div>
-                    <div class="metric-value" style="color: ${avgProficiency >= 3 ? 'var(--success)' : avgProficiency >= 2 ? 'var(--warning)' : 'var(--danger)'}">
-                        ${avgProficiency.toFixed(2)}
+function initializeAssessment() {
+    const container = document.getElementById('skillAssessment');
+    let qNum = 0;
+    skillDomains.forEach((domain, di) => {
+        const title = document.createElement('h2');
+        title.className = 'section-title';
+        title.textContent = domain.name;
+        container.appendChild(title);
+        domain.questions.forEach((question, qi) => {
+            const id = `q${di}_${qi}`;
+            qNum++;
+            const div = document.createElement('div');
+            div.className = 'skill-category';
+            div.id = `card-${id}`;
+            div.innerHTML = `
+                <div class="skill-header">
+                    <div style="flex:1;">
+                        <div class="skill-name">Question ${qNum}</div>
+                        <div class="question-text">${question}</div>
                     </div>
-                    <div class="metric-description">Across all skill domains</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${(avgProficiency / 5) * 100}%"></div>
-                    </div>
+                    <div class="skill-score" id="score-${id}">—</div>
                 </div>
-                <div class="metric-card">
-                    <div class="metric-label">Transformation Readiness</div>
-                    <div class="metric-value" style="color: ${readiness === 'High' ? 'var(--success)' : readiness === 'Medium' ? 'var(--accent)' : 'var(--warning)'}; font-size: 2rem;">
-                        ${readiness}
-                    </div>
-                    <div class="metric-description">Readiness for AI transformation</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${readiness === 'High' ? '100%' : readiness === 'Medium' ? '66%' : '33%'}"></div>
-                    </div>
+                <div class="rating-group" id="rating-${id}">
+                    ${[1,2,3,4,5].map(r => `<button class="rating-btn" onclick="setRating('${id}',${r})">${r}</button>`).join('')}
                 </div>
-                <div class="metric-card">
-                    <div class="metric-label">Expected Level</div>
-                    <div class="metric-value" style="color: var(--accent)">
-                        ${expectedLevel.toFixed(1)}
-                    </div>
-                    <div class="metric-description">For ${role} role</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${(expectedLevel / 5) * 100}%"></div>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">Role Alignment</div>
-                    <div class="metric-value" style="color: ${roleMatch === 'Meets' || roleMatch === 'Exceeds' ? 'var(--success)' : 'var(--warning)'}; font-size: 1.5rem;">
-                        ${roleMatch}
-                    </div>
-                    <div class="metric-description">Self-assessed vs expected</div>
-                </div>
+                <div class="rating-labels"><span>No Knowledge</span><span>Expert</span></div>
             `;
+            container.appendChild(div);
+        });
+    });
+}
 
-            generate9Grid(avgProficiency, readiness);
-            generateGapAnalysis(knowledgeGap, roleGap, avgProficiency, expectedLevel, domainAverages);
-            generateDetailedBreakdown(domainAverages);
-            generateRoleAlignment(currentResp, futureResp, roleMatch);
+function setRating(id, value) {
+    ratings[id] = value;
+    document.querySelectorAll(`#rating-${id} .rating-btn`).forEach((btn, i) => {
+        btn.classList.toggle('active', i + 1 === value);
+    });
+    const scoreEl = document.getElementById(`score-${id}`);
+    scoreEl.textContent = value;
+    scoreEl.classList.add('rated');
+    document.getElementById(`card-${id}`).classList.add('answered');
+    updateProgress();
+}
+
+function updateProgress() {
+    const answered = Object.keys(ratings).length;
+    const pct = (answered / TOTAL_QUESTIONS) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('completionBar').style.width = pct + '%';
+    document.getElementById('completionText').textContent = `${answered} / ${TOTAL_QUESTIONS}`;
+}
+
+function validate() {
+    const fields = ['employeeName','jobTitle','roleCategory','aiRole','transformationReadiness','aiContext','roleMatch'];
+    for (const f of fields) {
+        if (!document.getElementById(f).value.trim()) {
+            showToast('Please fill in all Employee Information fields.', 'error');
+            document.getElementById(f).scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return false;
         }
+    }
+    if (Object.keys(ratings).length < TOTAL_QUESTIONS) {
+        const remaining = TOTAL_QUESTIONS - Object.keys(ratings).length;
+        showToast(`Please answer all questions (${remaining} remaining).`, 'error');
+        return false;
+    }
+    return true;
+}
 
-        function generate9Grid(avgProf, readiness) {
-            const grid = document.getElementById('nineGrid');
-            grid.innerHTML = '';
+function computeResults() {
+    const domainAverages = skillDomains.map((domain, di) => {
+        const vals = domain.questions.map((_, qi) => ratings[`q${di}_${qi}`]);
+        return { name: domain.name, average: vals.reduce((a,b)=>a+b,0) / vals.length };
+    });
+    const avgProficiency = domainAverages.reduce((s,d)=>s+d.average,0) / domainAverages.length;
+    const role = document.getElementById('aiRole').value;
+    const readiness = document.getElementById('transformationReadiness').value;
+    const expectedLevels = { 'AI User':2.5, 'AI Enabler':3.5, 'AI Leader':4 };
+    const expectedLevel = expectedLevels[role] || 2.5;
+    const knowledgeGap = avgProficiency < 2;
+    const roleGap = avgProficiency < expectedLevel;
+    const aiSkillsLevel = avgProficiency < 2 ? 'Low' : avgProficiency <= 3.5 ? 'Medium' : 'High';
+    const gridMap = {
+        'High':   { 'Low':'Needs Development',    'Medium':'Growth Drivers',        'High':'Growth Drivers' },
+        'Medium': { 'Low':'Needs Support',         'Medium':'Steady Contributors',    'High':'Specialists in Progress' },
+        'Low':    { 'Low':'Priority Development',  'Medium':'Building Readiness',     'High':'Reluctant Experts' }
+    };
+    const gridCategory = gridMap[readiness][aiSkillsLevel];
+    return { domainAverages, avgProficiency, expectedLevel, knowledgeGap, roleGap, aiSkillsLevel, gridCategory, role, readiness };
+}
 
-            const gridData = [
-                [
-                    { label: 'High Readiness\nLow Skills', category: 'Needs Development', color: 'rgba(245, 158, 11, 0.2)' },
-                    { label: 'High Readiness\nMedium Skills', category: 'Growth Drivers', color: 'rgba(16, 185, 129, 0.2)' },
-                    { label: 'High Readiness\nHigh Skills', category: 'Growth Drivers', color: 'rgba(16, 185, 129, 0.3)' }
-                ],
-                [
-                    { label: 'Medium Readiness\nLow Skills', category: 'Needs Support', color: 'rgba(239, 68, 68, 0.2)' },
-                    { label: 'Medium Readiness\nMedium Skills', category: 'Steady Contributors', color: 'rgba(59, 130, 246, 0.2)' },
-                    { label: 'Medium Readiness\nHigh Skills', category: 'Specialists in Progress', color: 'rgba(167, 139, 250, 0.2)' }
-                ],
-                [
-                    { label: 'Low Readiness\nLow Skills', category: 'Priority Development', color: 'rgba(239, 68, 68, 0.3)' },
-                    { label: 'Low Readiness\nMedium Skills', category: 'Building Readiness', color: 'rgba(245, 158, 11, 0.2)' },
-                    { label: 'Low Readiness\nHigh Skills', category: 'Reluctant Experts', color: 'rgba(245, 158, 11, 0.3)' }
-                ]
-            ];
+function handleSubmit() {
+    if (!validate()) return;
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Calculating results...';
 
-            let xPos = avgProf < 2 ? 0 : avgProf <= 3.5 ? 1 : 2;
-            let yPos = readiness === 'High' ? 0 : readiness === 'Medium' ? 1 : 2;
+    setTimeout(() => {
+        computedResults = computeResults();
+        renderResults(computedResults);
+        document.getElementById('results').classList.add('active');
+        document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        btn.innerHTML = '✓ Results Generated';
+    }, 600);
+}
 
-            for (let row = 0; row < 3; row++) {
-                for (let col = 0; col < 3; col++) {
-                    const cellData = gridData[row][col];
-                    const cell = document.createElement('div');
-                    cell.className = 'grid-cell';
-                    cell.style.background = cellData.color;
-                    
-                    if (row === yPos && col === xPos) {
-                        cell.classList.add('active');
-                    }
-                    
-                    cell.innerHTML = `
-                        <div class="grid-label" style="line-height: 1.4;">
-                            <div style="font-weight: 700; margin-bottom: 0.25rem;">${cellData.category}</div>
-                            <div style="font-size: 0.7rem; opacity: 0.8;">${cellData.label.replace('\n', '<br>')}</div>
-                        </div>
-                    `;
-                    grid.appendChild(cell);
-                }
-            }
+function renderResults(r) {
+    const roleMatch = document.getElementById('roleMatch').value;
+    const readinessColor = r.readiness==='High'?'var(--success)':r.readiness==='Medium'?'var(--accent)':'var(--warning)';
+    const profColor = r.avgProficiency>=3?'var(--success)':r.avgProficiency>=2?'var(--warning)':'var(--danger)';
 
-            const currentCell = gridData[yPos][xPos];
-            const positionLabel = document.getElementById('gridPositionLabel');
-            
-            let description = '';
-            switch(currentCell.category) {
-                case 'Growth Drivers':
-                    description = 'Ready for advanced training & AI projects';
-                    break;
-                case 'Steady Contributors':
-                    description = 'Can handle applied AI in role';
-                    break;
-                case 'Specialists in Progress':
-                    description = 'Strong AI skills, need coaching on readiness';
-                    break;
-                case 'Needs Development':
-                    description = 'High potential, requires skill building';
-                    break;
-                case 'Needs Support':
-                    description = 'Requires both skill and readiness development';
-                    break;
-                case 'Building Readiness':
-                    description = 'Good skills, working on transformation mindset';
-                    break;
-                case 'Reluctant Experts':
-                    description = 'High skills but low adoption readiness';
-                    break;
-                case 'Priority Development':
-                    description = 'Requires comprehensive support program';
-                    break;
-            }
-            
-            positionLabel.innerHTML = `<strong>Position:</strong> ${currentCell.category} - ${description}`;
-        }
+    document.getElementById('metricsGrid').innerHTML = `
+        <div class="metric-card">
+            <div class="metric-label">Average Proficiency</div>
+            <div class="metric-value" style="color:${profColor}">${r.avgProficiency.toFixed(2)}</div>
+            <div class="metric-description">Across all 9 skill domains</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:${(r.avgProficiency/5)*100}%"></div></div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">AI Skills Level</div>
+            <div class="metric-value" style="color:${r.aiSkillsLevel==='High'?'var(--success)':r.aiSkillsLevel==='Medium'?'var(--accent)':'var(--warning)'}">${r.aiSkillsLevel}</div>
+            <div class="metric-description">Based on overall score (expected: ≥${r.expectedLevel} for ${r.role})</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">Transformation Readiness</div>
+            <div class="metric-value" style="color:${readinessColor}">${r.readiness}</div>
+            <div class="metric-description">Self-assessed readiness for AI adoption</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">Grid Position</div>
+            <div class="metric-value" style="font-size:1.1rem;color:var(--accent-light);line-height:1.3;">${r.gridCategory}</div>
+            <div class="metric-description">Role alignment: ${roleMatch}</div>
+        </div>
+    `;
 
-        function generateGapAnalysis(knowledgeGap, roleGap, avgProf, expected, domainAverages) {
-            const container = document.getElementById('gapAnalysis');
-            let html = '';
+    const gridData = [
+        [{l:'Needs Development',bg:'rgba(245,158,11,0.2)'},{l:'Growth Drivers',bg:'rgba(16,185,129,0.2)'},{l:'Growth Drivers',bg:'rgba(16,185,129,0.3)'}],
+        [{l:'Needs Support',bg:'rgba(239,68,68,0.2)'},{l:'Steady Contributors',bg:'rgba(59,130,246,0.2)'},{l:'Specialists in Progress',bg:'rgba(167,139,250,0.2)'}],
+        [{l:'Priority Development',bg:'rgba(239,68,68,0.3)'},{l:'Building Readiness',bg:'rgba(245,158,11,0.2)'},{l:'Reluctant Experts',bg:'rgba(245,158,11,0.3)'}]
+    ];
+    const xPos = {Low:0,Medium:1,High:2}[r.aiSkillsLevel];
+    const yPos = {High:0,Medium:1,Low:2}[r.readiness];
+    const gridEl = document.getElementById('nineGrid');
+    gridEl.innerHTML = '';
+    gridData.forEach((row, ri) => row.forEach((cell, ci) => {
+        const el = document.createElement('div');
+        el.className = 'grid-cell' + (ri===yPos&&ci===xPos?' active':'');
+        el.style.background = cell.bg;
+        el.innerHTML = `<div class="grid-label"><strong>${cell.l}</strong></div>`;
+        gridEl.appendChild(el);
+    }));
+    const desc = {
+        'Growth Drivers':'Ready for advanced training & AI projects',
+        'Steady Contributors':'Can handle applied AI in role',
+        'Specialists in Progress':'Strong AI skills, need coaching on readiness',
+        'Needs Development':'High potential, requires skill building',
+        'Needs Support':'Requires both skill and readiness development',
+        'Building Readiness':'Good skills, working on transformation mindset',
+        'Reluctant Experts':'High skills but low adoption readiness',
+        'Priority Development':'Requires comprehensive support program'
+    };
+    document.getElementById('gridPositionLabel').innerHTML = `<strong>Position:</strong> ${r.gridCategory} — ${desc[r.gridCategory]}`;
 
-            if (knowledgeGap) {
-                html += `
-                    <div class="gap-badge critical">
-                        <span class="gap-icon">🔴</span>
-                        <span><strong>Critical Knowledge Gap:</strong> Average proficiency (${avgProf.toFixed(2)}) is below 2.0</span>
-                    </div>
-                `;
-            }
+    let gapHtml = '';
+    if (r.knowledgeGap) gapHtml += `<div class="gap-badge critical"><span class="gap-icon">🔴</span><span><strong>Critical Knowledge Gap:</strong> Average (${r.avgProficiency.toFixed(2)}) is below 2.0 — foundational AI training is needed.</span></div>`;
+    if (r.roleGap) gapHtml += `<div class="gap-badge warning"><span class="gap-icon">⚠️</span><span><strong>Role Gap:</strong> Score (${r.avgProficiency.toFixed(2)}) is below the ${r.role} expectation (${r.expectedLevel}).</span></div>`;
+    const weak = r.domainAverages.filter(d=>d.average<2.5);
+    if (weak.length) gapHtml += `<div class="gap-badge warning"><span class="gap-icon">📊</span><span><strong>Priority Domains:</strong> ${weak.map(d=>d.name.replace(/^[A-I]\. /,'')).join(', ')}</span></div>`;
+    if (!r.knowledgeGap && !r.roleGap) gapHtml = `<div class="gap-badge ok"><span class="gap-icon">✅</span><span><strong>No Critical Gaps:</strong> Meets or exceeds expectations for ${r.role}.</span></div>`;
+    document.getElementById('gapAnalysis').innerHTML = gapHtml;
 
-            if (roleGap) {
-                html += `
-                    <div class="gap-badge warning">
-                        <span class="gap-icon">⚠️</span>
-                        <span><strong>Role-Specific Gap:</strong> Current level (${avgProf.toFixed(2)}) below expected (${expected.toFixed(1)})</span>
-                    </div>
-                `;
-            }
+    let bdHtml = '';
+    r.domainAverages.forEach(d => {
+        const pct = (d.average/5)*100;
+        const c = d.average>=4?'var(--success)':d.average>=3?'var(--accent)':d.average>=2?'var(--warning)':'var(--danger)';
+        bdHtml += `<div style="margin-bottom:1.5rem;"><div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;"><span style="font-weight:600;">${d.name.replace(/^[A-I]\. /,'')}</span><span style="font-family:'Space Mono',monospace;color:${c};font-weight:700;">${d.average.toFixed(2)}/5</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${c};"></div></div></div>`;
+    });
+    document.getElementById('detailedBreakdown').innerHTML = bdHtml;
 
-            const weakDomains = domainAverages.filter(d => d.average < 2.5);
-            if (weakDomains.length > 0) {
-                html += `
-                    <div class="gap-badge warning">
-                        <span class="gap-icon">📊</span>
-                        <span><strong>Priority Development Areas:</strong> ${weakDomains.map(d => d.name).join(', ')}</span>
-                    </div>
-                `;
-            }
+    const cur = Array.from(document.querySelectorAll('input[name="currentResp"]:checked')).map(e=>e.value);
+    const fut = Array.from(document.querySelectorAll('input[name="futureResp"]:checked')).map(e=>e.value);
+    const devGap = fut.filter(f=>!cur.includes(f));
+    let raHtml = `
+        <div style="margin-bottom:1.5rem;"><strong>Self-assessment:</strong> ${roleMatch}</div>
+        <div style="margin-bottom:1rem;"><div style="font-weight:600;margin-bottom:0.5rem;color:var(--text-muted);">Current Responsibilities:</div>${cur.length?cur.map(r=>`<div style="padding:0.5rem;background:var(--secondary);border-radius:4px;margin-bottom:0.25rem;">• ${r}</div>`).join(''):'<div style="color:var(--text-muted);">None selected</div>'}</div>
+        <div><div style="font-weight:600;margin-bottom:0.5rem;color:var(--accent);">Expected in 12 Months:</div>${fut.length?fut.map(r=>`<div style="padding:0.5rem;background:rgba(59,130,246,0.1);border-radius:4px;margin-bottom:0.25rem;">• ${r}</div>`).join(''):'<div style="color:var(--text-muted);">None selected</div>'}</div>
+    `;
+    if (devGap.length) raHtml += `<div style="margin-top:1.5rem;padding:1rem;background:rgba(245,158,11,0.1);border-left:3px solid var(--warning);border-radius:4px;"><div style="font-weight:600;margin-bottom:0.25rem;">Development Focus:</div><div style="color:var(--text-muted);">Prepare for: ${devGap.join(', ')}</div></div>`;
+    document.getElementById('roleAlignment').innerHTML = raHtml;
+}
 
-            if (!knowledgeGap && !roleGap) {
-                html = `
-                    <div class="gap-badge" style="border-color: var(--success); background: rgba(16, 185, 129, 0.1);">
-                        <span class="gap-icon">✅</span>
-                        <span><strong>No Critical Gaps:</strong> Employee meets or exceeds expectations</span>
-                    </div>
-                `;
-            }
+async function saveAndFinish() {
+    const btn = document.getElementById('doneBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Saving to Google Sheets...';
 
-            container.innerHTML = html;
-        }
+    const payload = {
+        employeeName: document.getElementById('employeeName').value,
+        jobTitle: document.getElementById('jobTitle').value,
+        roleCategory: document.getElementById('roleCategory').value,
+        aiRole: document.getElementById('aiRole').value,
+        transformationReadiness: document.getElementById('transformationReadiness').value,
+        aiContext: document.getElementById('aiContext').value,
+        roleMatch: document.getElementById('roleMatch').value,
+        avgProficiency: +computedResults.avgProficiency.toFixed(3),
+        aiSkillsLevel: computedResults.aiSkillsLevel,
+        gridCategory: computedResults.gridCategory,
+        knowledgeGap: computedResults.knowledgeGap,
+        roleGap: computedResults.roleGap,
+        domainAverages: computedResults.domainAverages.map(d => +d.average.toFixed(3)),
+        currentResponsibilities: Array.from(document.querySelectorAll('input[name="currentResp"]:checked')).map(e=>e.value),
+        futureResponsibilities: Array.from(document.querySelectorAll('input[name="futureResp"]:checked')).map(e=>e.value),
+        ratings
+    };
 
-        function generateDetailedBreakdown(domainAverages) {
-            const container = document.getElementById('detailedBreakdown');
-            let html = '';
-
-            domainAverages.forEach(domain => {
-                const percentage = (domain.average / 5) * 100;
-                const color = domain.average >= 4 ? 'var(--success)' : domain.average >= 3 ? 'var(--accent)' : domain.average >= 2 ? 'var(--warning)' : 'var(--danger)';
-                
-                html += `
-                    <div style="margin-bottom: 1.5rem;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                            <span style="font-weight: 600;">${domain.name}</span>
-                            <span style="font-family: 'Space Mono', monospace; color: ${color}; font-weight: 700;">${domain.average.toFixed(2)}/5</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${percentage}%; background: ${color};"></div>
-                        </div>
-                    </div>
-                `;
+    try {
+        if (GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL !== "YOUR_APPS_SCRIPT_URL_HERE") {
+            await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
             });
-
-            container.innerHTML = html;
+            showToast('Saved to Google Sheets! ✓', 'success');
+        } else {
+            console.warn('No Google Script URL set — data not saved.');
         }
+    } catch (err) {
+        showToast('Could not save — check your Apps Script URL.', 'error');
+        console.error(err);
+    }
 
-        function generateRoleAlignment(current, future, match) {
-            const container = document.getElementById('roleAlignment');
-            
-            let html = `
-                <div style="margin-bottom: 1.5rem;">
-                    <div style="font-weight: 600; margin-bottom: 0.5rem;">Self-Assessment: ${match}</div>
-                </div>
-                <div style="margin-bottom: 1.5rem;">
-                    <div style="font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted);">Current Responsibilities:</div>
-                    ${current.length > 0 ? current.map(r => `<div style="padding: 0.5rem; background: var(--secondary); border-radius: 4px; margin-bottom: 0.25rem;">• ${r}</div>`).join('') : '<div style="color: var(--text-muted);">None selected</div>'}
-                </div>
-                <div>
-                    <div style="font-weight: 600; margin-bottom: 0.5rem; color: var(--accent);">Expected Future Responsibilities (12 months):</div>
-                    ${future.length > 0 ? future.map(r => `<div style="padding: 0.5rem; background: rgba(59, 130, 246, 0.1); border-radius: 4px; margin-bottom: 0.25rem;">• ${r}</div>`).join('') : '<div style="color: var(--text-muted);">None selected</div>'}
-                </div>
-            `;
+    document.getElementById('finalGridPosition').textContent = computedResults.gridCategory;
+    document.getElementById('finalScore').textContent = `Proficiency: ${computedResults.avgProficiency.toFixed(2)}/5 · ${computedResults.aiSkillsLevel} AI Skills`;
+    document.getElementById('assessmentForm').style.display = 'none';
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('thankYouScreen').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-            const gap = future.filter(r => !current.includes(r));
-            if (gap.length > 0) {
-                html += `
-                    <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(245, 158, 11, 0.1); border-left: 3px solid var(--warning); border-radius: 4px;">
-                        <div style="font-weight: 600; margin-bottom: 0.5rem;">Development Focus:</div>
-                        <div style="color: var(--text-muted);">Prepare for: ${gap.join(', ')}</div>
-                    </div>
-                `;
-            }
+function showToast(msg, type='success') {
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 4000);
+}
 
-            container.innerHTML = html;
-        }
-
-        initializeAssessment();
-    </script>
+initializeAssessment();
+</script>
 </body>
 </html>
