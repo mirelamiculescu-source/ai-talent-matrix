@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assessment Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0A0E27; --secondary: #1E293B; --accent: #3B82F6;
+            --accent-light: #60A5FA; --success: #10B981; --warning: #F59E0B;
+            --danger: #EF4444; --text: #F8FAFC; --text-muted: #94A3B8;
+            --border: #334155; --bg-card: #151B30;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'DM Sans',sans-serif; background:var(--primary); color:var(--text); line-height:1.6; min-height:100vh; }
+        .container { max-width: 1600px; margin: 0 auto; padding: 2rem; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 2rem 0 3rem; flex-wrap: wrap; gap: 1rem; }
+        .logo h1 { font-size: 2rem; font-weight: 700; background: linear-gradient(135deg,#60A5FA,#A78BFA); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .logo p { font-family:'Space Mono',monospace; font-size:0.85rem; color:var(--text-muted); margin-top:0.25rem; }
+        .btn { padding: 0.75rem 1.5rem; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.3s ease; font-family:'DM Sans',sans-serif; }
+        .btn:hover { background: var(--accent-light); transform: translateY(-1px); }
+        .btn-secondary { background: var(--secondary); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--border); }
+
+        /* Setup panel */
+        .setup-panel { background: var(--bg-card); border-radius: 16px; padding: 2rem; border: 1px solid var(--warning); margin-bottom: 2rem; }
+        .setup-panel h2 { color: var(--warning); margin-bottom: 1rem; }
+        .url-input-row { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+        .url-input-row input { flex: 1; min-width: 300px; padding: 0.875rem; background: var(--secondary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 1rem; }
+        .url-input-row input:focus { outline: none; border-color: var(--accent); }
+
+        /* Summary stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: var(--bg-card); border-radius: 16px; padding: 1.5rem 2rem; border: 1px solid var(--border); position: relative; overflow: hidden; }
+        .stat-card::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; background:var(--gradient); }
+        .stat-label { font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; }
+        .stat-value { font-size:2.2rem; font-weight:700; font-family:'Space Mono',monospace; margin-top:0.25rem; }
+        .stat-sub { font-size:0.85rem; color:var(--text-muted); margin-top:0.25rem; }
+
+        /* Filters */
+        .filters { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-bottom: 1.5rem; }
+        .filters select { padding: 0.625rem 1rem; background: var(--secondary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family:'DM Sans',sans-serif; cursor: pointer; }
+        .filters select:focus { outline: none; border-color: var(--accent); }
+        .filter-label { font-size:0.85rem; color:var(--text-muted); font-weight:600; }
+        .search-input { padding: 0.625rem 1rem; background: var(--secondary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family:'DM Sans',sans-serif; min-width: 200px; }
+        .search-input:focus { outline:none; border-color:var(--accent); }
+
+        /* Team 9-grid */
+        .nine-grid-section { background: var(--bg-card); border-radius: 16px; padding: 2rem; border: 1px solid var(--border); margin-bottom: 2rem; }
+        .nine-grid-section h2 { font-size:1.25rem; font-weight:700; margin-bottom:1.5rem; }
+        .admin-grid-wrapper { display: grid; grid-template-columns: 40px 1fr; gap: 0.5rem; align-items: center; }
+        .y-axis-label { writing-mode: vertical-rl; transform: rotate(180deg); font-size:0.8rem; color:var(--text-muted); text-align:center; font-weight:600; letter-spacing:0.05em; }
+        .admin-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+        .admin-grid-cell { background: var(--secondary); padding: 1.25rem; min-height: 120px; transition: background 0.2s; }
+        .admin-grid-cell:hover { background: rgba(59,130,246,0.05); }
+        .cell-header { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted); margin-bottom:0.75rem; }
+        .cell-chips { display:flex; flex-wrap:wrap; gap:0.375rem; }
+        .employee-chip { padding:0.25rem 0.625rem; border-radius:20px; font-size:0.75rem; font-weight:600; background:var(--accent); color:white; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+        .employee-chip:hover { transform:scale(1.05); background:var(--accent-light); }
+        .cell-count { font-size:0.75rem; color:var(--text-muted); margin-top:0.5rem; font-family:'Space Mono',monospace; }
+        .x-axis-label { text-align:center; font-size:0.8rem; color:var(--text-muted); font-weight:600; letter-spacing:0.05em; margin-top:0.5rem; }
+
+        /* Table */
+        .table-section { background: var(--bg-card); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 2rem; }
+        .table-header { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
+        .table-header h2 { font-size:1.25rem; font-weight:700; }
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th { padding: 1rem 1.25rem; background: var(--secondary); font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted); text-align:left; white-space:nowrap; border-bottom:1px solid var(--border); }
+        td { padding: 1rem 1.25rem; border-bottom: 1px solid rgba(51,65,85,0.5); font-size:0.9rem; vertical-align:middle; }
+        tr:last-child td { border-bottom:none; }
+        tr:hover td { background:rgba(59,130,246,0.05); }
+        .badge { display:inline-block; padding:0.25rem 0.75rem; border-radius:20px; font-size:0.75rem; font-weight:700; }
+        .badge-success { background:rgba(16,185,129,0.2); color:var(--success); }
+        .badge-warning { background:rgba(245,158,11,0.2); color:var(--warning); }
+        .badge-danger { background:rgba(239,68,68,0.2); color:var(--danger); }
+        .badge-info { background:rgba(59,130,246,0.2); color:var(--accent-light); }
+        .badge-purple { background:rgba(167,139,250,0.2); color:#A78BFA; }
+
+        /* Domain heatmap */
+        .heatmap-section { background: var(--bg-card); border-radius: 16px; padding: 2rem; border: 1px solid var(--border); margin-bottom: 2rem; }
+        .heatmap-section h2 { font-size:1.25rem; font-weight:700; margin-bottom:1.5rem; }
+        .heatmap-grid { display:grid; gap:0.75rem; }
+        .heatmap-row { display:grid; grid-template-columns: 220px 1fr 60px; gap:1rem; align-items:center; }
+        .heatmap-label { font-size:0.9rem; font-weight:600; color:var(--text-muted); }
+        .heatmap-bar { height: 28px; background: var(--secondary); border-radius: 6px; overflow:hidden; }
+        .heatmap-fill { height:100%; border-radius:6px; transition:width 0.6s ease; display:flex; align-items:center; padding-left:0.5rem; font-size:0.75rem; font-weight:700; color:white; }
+        .heatmap-score { font-family:'Space Mono',monospace; font-weight:700; font-size:0.9rem; text-align:right; }
+
+        /* Loading / empty states */
+        .loading { text-align:center; padding:4rem; color:var(--text-muted); }
+        .spinner { display:inline-block; width:40px; height:40px; border:4px solid rgba(255,255,255,0.1); border-radius:50%; border-top-color:var(--accent); animation:spin 0.8s linear infinite; margin-bottom:1rem; }
+        @keyframes spin { to{transform:rotate(360deg)} }
+        .empty-state { text-align:center; padding:4rem; color:var(--text-muted); }
+        .empty-icon { font-size:3rem; margin-bottom:1rem; }
+
+        /* Detail modal */
+        .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center; }
+        .modal-overlay.active { display:flex; }
+        .modal { background:var(--bg-card); border-radius:16px; padding:2rem; border:1px solid var(--border); max-width:700px; width:95%; max-height:90vh; overflow-y:auto; animation:fadeIn 0.3s ease; }
+        @keyframes fadeIn { from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:scale(1)} }
+        .modal-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.5rem; }
+        .modal-close { background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:1.5rem; line-height:1; transition:color 0.2s; }
+        .modal-close:hover { color:var(--text); }
+        .modal-section { margin-bottom:1.5rem; }
+        .modal-section h3 { font-size:0.85rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted); margin-bottom:0.75rem; padding-bottom:0.5rem; border-bottom:1px solid var(--border); }
+        .modal-domain-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; }
+        .modal-bar { flex:1; height:8px; background:var(--secondary); border-radius:4px; overflow:hidden; margin:0 1rem; }
+        .modal-bar-fill { height:100%; border-radius:4px; transition:width 0.5s; }
+
+        @media (max-width:768px) { 
+            .heatmap-row { grid-template-columns: 1fr; } 
+            .filters { flex-direction:column; align-items:flex-start; }
+            .admin-grid-wrapper { grid-template-columns: 1fr; }
+            .y-axis-label { display:none; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <div class="logo">
+            <h1>Admin Dashboard</h1>
+            <p>AI Skills Assessment — Team Overview</p>
+        </div>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+            <button class="btn btn-secondary" onclick="exportCSV()">⬇ Export CSV</button>
+            <button class="btn" onclick="loadData()">↻ Refresh Data</button>
+        </div>
+    </header>
+
+    <!-- Setup panel -->
+    <div class="setup-panel" id="setupPanel">
+        <h2>⚙️ Connect Your Google Apps Script</h2>
+        <p style="color:var(--text-muted);margin-bottom:1rem;">Paste your Web App URL from Google Apps Script to load responses. This is only needed once — it will be saved in your browser.</p>
+        <div class="url-input-row">
+            <input type="text" id="scriptUrlInput" placeholder="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec" />
+            <button class="btn" onclick="saveUrl()">Connect</button>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid" id="statsGrid">
+        <div class="stat-card"><div class="stat-label">Total Responses</div><div class="stat-value" id="statTotal">—</div><div class="stat-sub">Assessments submitted</div></div>
+        <div class="stat-card"><div class="stat-label">Team Avg Proficiency</div><div class="stat-value" id="statAvg">—</div><div class="stat-sub">Out of 5.00</div></div>
+        <div class="stat-card"><div class="stat-label">Knowledge Gaps</div><div class="stat-value" id="statGaps" style="color:var(--danger);">—</div><div class="stat-sub">Employees below 2.0</div></div>
+        <div class="stat-card"><div class="stat-label">Growth Drivers</div><div class="stat-value" id="statGrowth" style="color:var(--success);">—</div><div class="stat-sub">High readiness + skills</div></div>
+        <div class="stat-card"><div class="stat-label">Role Gap</div><div class="stat-value" id="statRoleGap" style="color:var(--warning);">—</div><div class="stat-sub">Below role expectation</div></div>
+    </div>
+
+    <!-- Team 9-grid -->
+    <div class="nine-grid-section">
+        <h2>Team 9-Grid Matrix</h2>
+        <div class="admin-grid-wrapper">
+            <div class="y-axis-label">TRANSFORMATION READINESS ↑</div>
+            <div>
+                <div class="admin-grid" id="adminGrid"></div>
+                <div class="x-axis-label">AI SKILLS LEVEL →</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Domain heatmap -->
+    <div class="heatmap-section">
+        <h2>Team Skill Domain Averages</h2>
+        <div class="heatmap-grid" id="heatmapGrid"></div>
+    </div>
+
+    <!-- Filters + Table -->
+    <div class="table-section">
+        <div class="table-header">
+            <h2>All Responses</h2>
+            <div class="filters">
+                <input class="search-input" type="text" id="searchInput" placeholder="🔍 Search name or title..." oninput="applyFilters()">
+                <span class="filter-label">Filter:</span>
+                <select id="filterRole" onchange="applyFilters()"><option value="">All AI Roles</option><option>AI User</option><option>AI Enabler</option><option>AI Leader</option></select>
+                <select id="filterReadiness" onchange="applyFilters()"><option value="">All Readiness</option><option>Low</option><option>Medium</option><option>High</option></select>
+                <select id="filterGrid" onchange="applyFilters()"><option value="">All Grid Positions</option><option>Growth Drivers</option><option>Steady Contributors</option><option>Specialists in Progress</option><option>Needs Development</option><option>Needs Support</option><option>Building Readiness</option><option>Reluctant Experts</option><option>Priority Development</option></select>
+                <select id="filterGap" onchange="applyFilters()"><option value="">Any Status</option><option value="gap">Has Gaps</option><option value="ok">No Gaps</option></select>
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <div id="tableContent"><div class="loading"><div class="spinner"></div><br>Loading responses...</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+const STORAGE_KEY = 'ai_admin_script_url';
+const HARDCODED_URL = "https://script.google.com/a/macros/visma.com/s/AKfycbwYO6LrR-vt4vBernut3ivZmqHHMkcX3oULnimuC7LBDP6Pd2WL3oNhaAAeQSNLo1P2Zg/exec";
+let allData = [];
+let filteredData = [];
+
+const DOMAIN_NAMES = [
+    'AI Exposure & Awareness','AI Fundamentals','Data Literacy',
+    'AI Tools & Platforms','Prompting & Interaction','Workflow Integration',
+    'Analytics & Decision Making','Security, Ethics & Governance','Innovation & Problem Solving'
+];
+
+const GRID_CELL_DEFS = [
+    // row 0 = High readiness
+    [{l:'Needs Development',bg:'rgba(245,158,11,0.15)',r:'High',s:'Low'},
+     {l:'Growth Drivers',bg:'rgba(16,185,129,0.15)',r:'High',s:'Medium'},
+     {l:'Growth Drivers',bg:'rgba(16,185,129,0.25)',r:'High',s:'High'}],
+    // row 1 = Medium
+    [{l:'Needs Support',bg:'rgba(239,68,68,0.15)',r:'Medium',s:'Low'},
+     {l:'Steady Contributors',bg:'rgba(59,130,246,0.15)',r:'Medium',s:'Medium'},
+     {l:'Specialists in Progress',bg:'rgba(167,139,250,0.15)',r:'Medium',s:'High'}],
+    // row 2 = Low
+    [{l:'Priority Development',bg:'rgba(239,68,68,0.25)',r:'Low',s:'Low'},
+     {l:'Building Readiness',bg:'rgba(245,158,11,0.15)',r:'Low',s:'Medium'},
+     {l:'Reluctant Experts',bg:'rgba(245,158,11,0.25)',r:'Low',s:'High'}]
+];
+
+// ── URL setup ──────────────────────────────────────────
+function saveUrl() {
+    const url = document.getElementById('scriptUrlInput').value.trim();
+    if (!url.startsWith('https://script.google.com')) { alert('Please enter a valid Apps Script URL.'); return; }
+    localStorage.setItem(STORAGE_KEY, url);
+    document.getElementById('setupPanel').style.display = 'none';
+    loadData();
+}
+
+function getScriptUrl() {
+    return localStorage.getItem(STORAGE_KEY) || HARDCODED_URL;
+}
+
+window.onload = () => {
+    document.getElementById('setupPanel').style.display = 'none';
+    loadData();
+    renderEmptyGrid();
+};
+
+// ── Load data from Apps Script ─────────────────────────
+async function loadData() {
+    const url = getScriptUrl();
+    if (!url) { renderEmptyGrid(); return; }
+
+    document.getElementById('tableContent').innerHTML = '<div class="loading"><div class="spinner"></div><br>Loading responses...</div>';
+
+    try {
+        const res = await fetch(url);
+        const json = await res.json();
+        if (!json.success) throw new Error(json.message);
+        allData = json.data || [];
+        filteredData = [...allData];
+        render();
+    } catch (err) {
+        document.getElementById('tableContent').innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>Could not load data.<br><small style="color:var(--text-muted)">${err.message}</small></p></div>`;
+        console.error(err);
+    }
+}
+
+// ── Render everything ──────────────────────────────────
+function render() {
+    renderStats();
+    renderGrid();
+    renderHeatmap();
+    renderTable();
+}
+
+function renderStats() {
+    const n = allData.length;
+    document.getElementById('statTotal').textContent = n;
+    if (n === 0) return;
+    const avgProf = allData.reduce((s,r) => s + parseFloat(r['Average Proficiency']||0), 0) / n;
+    const gaps = allData.filter(r => r['Knowledge Gap'] === 'Yes').length;
+    const growth = allData.filter(r => r['Grid Category'] === 'Growth Drivers').length;
+    const roleGaps = allData.filter(r => r['Role Gap'] === 'Yes').length;
+    document.getElementById('statAvg').textContent = avgProf.toFixed(2);
+    document.getElementById('statGaps').textContent = gaps;
+    document.getElementById('statGrowth').textContent = growth;
+    document.getElementById('statRoleGap').textContent = roleGaps;
+}
+
+function renderGrid() {
+    const el = document.getElementById('adminGrid');
+    el.innerHTML = '';
+    GRID_CELL_DEFS.forEach((row, ri) => {
+        row.forEach((cell, ci) => {
+            const employees = allData.filter(r =>
+                r['Transformation Readiness'] === cell.r && r['AI Skills Level'] === cell.s
+            );
+            const div = document.createElement('div');
+            div.className = 'admin-grid-cell';
+            div.style.background = cell.bg;
+            div.innerHTML = `
+                <div class="cell-header">${cell.l}</div>
+                <div class="cell-chips">
+                    ${employees.map(e => `<div class="employee-chip" onclick="showDetail(${allData.indexOf(e)})" title="${e['Employee Name']}">${e['Employee Name'].split(' ')[0]}</div>`).join('')}
+                </div>
+                <div class="cell-count">${employees.length} employee${employees.length !== 1 ? 's' : ''}</div>
+            `;
+            el.appendChild(div);
+        });
+    });
+}
+
+function renderEmptyGrid() {
+    const el = document.getElementById('adminGrid');
+    if (el.children.length > 0) return;
+    el.innerHTML = '';
+    GRID_CELL_DEFS.forEach(row => {
+        row.forEach(cell => {
+            const div = document.createElement('div');
+            div.className = 'admin-grid-cell';
+            div.style.background = cell.bg;
+            div.innerHTML = `<div class="cell-header">${cell.l}</div><div class="cell-count" style="color:var(--border);">No data yet</div>`;
+            el.appendChild(div);
+        });
+    });
+}
+
+function renderHeatmap() {
+    const el = document.getElementById('heatmapGrid');
+    if (allData.length === 0) { el.innerHTML = '<div class="empty-state" style="padding:2rem;">No data available.</div>'; return; }
+
+    const domainCols = ['AI Exposure & Awareness','AI Fundamentals','Data Literacy','AI Tools & Platforms','Prompting & Interaction','Workflow Integration','Analytics & Decision Making','Security, Ethics & Governance','Innovation & Problem Solving'];
+
+    const avgs = domainCols.map(col => {
+        const vals = allData.map(r => parseFloat(r[col]||0)).filter(v=>v>0);
+        return vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : 0;
+    });
+
+    el.innerHTML = domainCols.map((name, i) => {
+        const avg = avgs[i];
+        const pct = (avg/5)*100;
+        const color = avg>=4?'var(--success)':avg>=3?'var(--accent)':avg>=2?'var(--warning)':'var(--danger)';
+        return `<div class="heatmap-row">
+            <div class="heatmap-label">${name}</div>
+            <div class="heatmap-bar"><div class="heatmap-fill" style="width:${pct}%;background:${color};">&nbsp;</div></div>
+            <div class="heatmap-score" style="color:${color};">${avg.toFixed(2)}</div>
+        </div>`;
+    }).join('');
+}
+
+function applyFilters() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const role = document.getElementById('filterRole').value;
+    const readiness = document.getElementById('filterReadiness').value;
+    const grid = document.getElementById('filterGrid').value;
+    const gap = document.getElementById('filterGap').value;
+
+    filteredData = allData.filter(r => {
+        if (search && !r['Employee Name'].toLowerCase().includes(search) && !r['Job Title'].toLowerCase().includes(search)) return false;
+        if (role && r['Expected AI Role'] !== role) return false;
+        if (readiness && r['Transformation Readiness'] !== readiness) return false;
+        if (grid && r['Grid Category'] !== grid) return false;
+        if (gap === 'gap' && r['Knowledge Gap'] !== 'Yes' && r['Role Gap'] !== 'Yes') return false;
+        if (gap === 'ok' && (r['Knowledge Gap'] === 'Yes' || r['Role Gap'] === 'Yes')) return false;
+        return true;
+    });
+    renderTable();
+}
+
+function renderTable() {
+    if (filteredData.length === 0) {
+        document.getElementById('tableContent').innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>No responses match your filters.</p></div>';
+        return;
+    }
+    const gridBadgeClass = {
+        'Growth Drivers':'badge-success', 'Steady Contributors':'badge-info',
+        'Specialists in Progress':'badge-purple', 'Needs Development':'badge-warning',
+        'Needs Support':'badge-danger', 'Building Readiness':'badge-warning',
+        'Reluctant Experts':'badge-warning', 'Priority Development':'badge-danger'
+    };
+    const roleBadgeClass = { 'AI User':'badge-info', 'AI Enabler':'badge-purple', 'AI Leader':'badge-success' };
+
+    let html = `<table>
+        <thead><tr>
+            <th>Employee</th><th>Title</th><th>AI Role</th>
+            <th>Proficiency</th><th>AI Skills</th><th>Readiness</th>
+            <th>Grid Position</th><th>Knowledge Gap</th><th>Role Gap</th>
+            <th>Submitted</th><th></th>
+        </tr></thead><tbody>`;
+
+    filteredData.forEach((r, i) => {
+        const prof = parseFloat(r['Average Proficiency']||0);
+        const profColor = prof>=3?'var(--success)':prof>=2?'var(--warning)':'var(--danger)';
+        const date = r['Timestamp'] ? new Date(r['Timestamp']).toLocaleDateString() : '—';
+        html += `<tr>
+            <td><strong>${r['Employee Name']||'—'}</strong></td>
+            <td style="color:var(--text-muted);">${r['Job Title']||'—'}</td>
+            <td><span class="badge ${roleBadgeClass[r['Expected AI Role']]||'badge-info'}">${r['Expected AI Role']||'—'}</span></td>
+            <td style="font-family:'Space Mono',monospace;font-weight:700;color:${profColor};">${prof.toFixed(2)}</td>
+            <td>${r['AI Skills Level']||'—'}</td>
+            <td>${r['Transformation Readiness']||'—'}</td>
+            <td><span class="badge ${gridBadgeClass[r['Grid Category']]||'badge-info'}">${r['Grid Category']||'—'}</span></td>
+            <td>${r['Knowledge Gap']==='Yes'?'<span class="badge badge-danger">⚠ Yes</span>':'<span class="badge badge-success">✓ No</span>'}</td>
+            <td>${r['Role Gap']==='Yes'?'<span class="badge badge-warning">⚠ Yes</span>':'<span class="badge badge-success">✓ No</span>'}</td>
+            <td style="color:var(--text-muted);font-size:0.85rem;">${date}</td>
+            <td><button class="btn btn-secondary" style="padding:0.4rem 0.75rem;font-size:0.8rem;" onclick="showDetail(${allData.indexOf(r)})">Details</button></td>
+        </tr>`;
+    });
+    html += '</tbody></table>';
+    document.getElementById('tableContent').innerHTML = html;
+}
+
+// ── Detail Modal ───────────────────────────────────────
+function showDetail(idx) {
+    const r = allData[idx];
+    if (!r) return;
+    const prof = parseFloat(r['Average Proficiency']||0);
+    const profColor = prof>=3?'var(--success)':prof>=2?'var(--warning)':'var(--danger)';
+
+    const domainCols = ['AI Exposure & Awareness','AI Fundamentals','Data Literacy','AI Tools & Platforms','Prompting & Interaction','Workflow Integration','Analytics & Decision Making','Security, Ethics & Governance','Innovation & Problem Solving'];
+
+    const domainsHtml = domainCols.map(name => {
+        const val = parseFloat(r[name]||0);
+        const pct = (val/5)*100;
+        const c = val>=4?'var(--success)':val>=3?'var(--accent)':val>=2?'var(--warning)':'var(--danger)';
+        return `<div class="modal-domain-row">
+            <div style="font-size:0.85rem;min-width:180px;">${name}</div>
+            <div class="modal-bar"><div class="modal-bar-fill" style="width:${pct}%;background:${c};"></div></div>
+            <div style="font-family:'Space Mono',monospace;font-size:0.85rem;font-weight:700;color:${c};min-width:40px;text-align:right;">${val.toFixed(2)}</div>
+        </div>`;
+    }).join('');
+
+    document.getElementById('modalContent').innerHTML = `
+        <div class="modal-header">
+            <div>
+                <div style="font-size:1.5rem;font-weight:700;">${r['Employee Name']}</div>
+                <div style="color:var(--text-muted);">${r['Job Title']} · ${r['Role Category']||''}</div>
+            </div>
+            <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+        <div class="modal-section">
+            <h3>Overview</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <div><div style="font-size:0.8rem;color:var(--text-muted);">Expected AI Role</div><div style="font-weight:700;">${r['Expected AI Role']||'—'}</div></div>
+                <div><div style="font-size:0.8rem;color:var(--text-muted);">Avg Proficiency</div><div style="font-weight:700;font-family:'Space Mono',monospace;color:${profColor};">${prof.toFixed(2)}/5</div></div>
+                <div><div style="font-size:0.8rem;color:var(--text-muted);">AI Skills Level</div><div style="font-weight:700;">${r['AI Skills Level']||'—'}</div></div>
+                <div><div style="font-size:0.8rem;color:var(--text-muted);">Transformation Readiness</div><div style="font-weight:700;">${r['Transformation Readiness']||'—'}</div></div>
+                <div><div style="font-size:0.8rem;color:var(--text-muted);">Grid Position</div><div style="font-weight:700;color:var(--accent-light);">${r['Grid Category']||'—'}</div></div>
+                <div><div style="font-size:0.8rem;color:var(--text-muted);">AI Usage Context</div><div style="font-weight:700;">${r['AI Usage Context']||'—'}</div></div>
+            </div>
+        </div>
+        <div class="modal-section">
+            <h3>Gap Analysis</h3>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+                <div style="padding:0.5rem 1rem;border-radius:8px;background:${r['Knowledge Gap']==='Yes'?'rgba(239,68,68,0.15)':'rgba(16,185,129,0.15)'};border:1px solid ${r['Knowledge Gap']==='Yes'?'var(--danger)':'var(--success)'};">
+                    Knowledge Gap: <strong>${r['Knowledge Gap']||'—'}</strong>
+                </div>
+                <div style="padding:0.5rem 1rem;border-radius:8px;background:${r['Role Gap']==='Yes'?'rgba(245,158,11,0.15)':'rgba(16,185,129,0.15)'};border:1px solid ${r['Role Gap']==='Yes'?'var(--warning)':'var(--success)'};">
+                    Role Gap: <strong>${r['Role Gap']||'—'}</strong>
+                </div>
+            </div>
+        </div>
+        <div class="modal-section">
+            <h3>Skill Domain Breakdown</h3>
+            ${domainsHtml}
+        </div>
+        <div class="modal-section">
+            <h3>Role Alignment</h3>
+            <div style="display:grid;gap:0.75rem;">
+                <div><span style="color:var(--text-muted);">Self-assessment: </span>${r['Role Match']||'—'}</div>
+                <div><span style="color:var(--text-muted);">Current responsibilities: </span>${r['Current Responsibilities']||'None'}</div>
+                <div><span style="color:var(--accent);">Future responsibilities (12mo): </span>${r['Future Responsibilities']||'None'}</div>
+            </div>
+        </div>
+    `;
+    document.getElementById('modalOverlay').classList.add('active');
+}
+
+function closeModal(e) {
+    if (!e || e.target === document.getElementById('modalOverlay')) {
+        document.getElementById('modalOverlay').classList.remove('active');
+    }
+}
+
+// ── Export CSV ─────────────────────────────────────────
+function exportCSV() {
+    if (allData.length === 0) { alert('No data to export.'); return; }
+    const headers = Object.keys(allData[0]);
+    const rows = allData.map(r => headers.map(h => `"${(r[h]||'').toString().replace(/"/g,'""')}"`).join(','));
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type:'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ai-assessment-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
